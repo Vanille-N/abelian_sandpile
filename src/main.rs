@@ -2,12 +2,13 @@ use std::fs;
 use std::process::Command;
 
 mod sandpile;
+mod canvas;
 
 use sandpile::*;
 
 fn main() {
     let name = String::from("multiple");
-    let algo = String::from("sandpile");
+    let algo = Automaton::Sandpile;
     let mut cfg = Config::make(algo, name);
 
     cfg.prepare();
