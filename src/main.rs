@@ -3,13 +3,15 @@ use std::process::Command;
 
 mod sandpile;
 mod canvas;
+mod game_of_life;
 
 use sandpile::*;
+use game_of_life::*;
 
 fn main() {
-    let name = String::from("multiple");
-    let algo = Automaton::Sandpile;
-    let mut cfg = Config::make(algo, name);
+    let name = String::from("rand");
+    let algo = Automaton::GameOfLife;
+    let mut cfg = Config::new(algo, name, 25);
 
     cfg.prepare();
     render(&mut cfg);
@@ -30,6 +32,14 @@ fn render(cfg: &mut Config) {
                 pile.stabilize();
             }
         }
+        Automaton::GameOfLife => {
+            let mut game = Colony::new(201, 201);
+            game.init_rand(0.1);
+            for i in 0..1000 {
+                game.render(cfg);
+                game.next();
+            }
+        }
     }
 }
 
@@ -37,14 +47,16 @@ pub struct Config {
     algo: Automaton,
     name: String,
     idx: usize,
+    framerate: usize,
 }
 
 impl Config {
-    pub fn make(algo: Automaton, name: String) -> Self {
+    pub fn new(algo: Automaton, name: String, framerate: usize) -> Self {
         Self {
             algo,
             name,
             idx: 0,
+            framerate,
         }
     }
 
@@ -68,6 +80,11 @@ impl Config {
             .arg(&self.file())
             .status()
             .expect("Cleanup aborted");
+        let _ = Command::new("rm")
+            .arg("-r")
+            .arg(&self.dir())
+            .status()
+            .expect("Cleanup aborted");
         fs::create_dir(self.dir())
             .expect(&format!("could not create directory {}", self.dir()));
     }
@@ -79,7 +96,7 @@ impl Config {
                     "-framerate", "25",
                     "-i", &format!("{}/*.ppm", self.dir()),
                     "-vcodec", "libx264",
-                    "-crf", "15",
+                    "-crf", &format!("{}", self.framerate),
                     &self.file()])
             .status()
             .unwrap_or_else(|e| {
@@ -101,12 +118,14 @@ impl Config {
 
 pub enum Automaton {
     Sandpile,
+    GameOfLife,
 }
 
 impl Automaton {
     pub fn str(&self) -> String {
         String::from(match self {
             Automaton::Sandpile => "sand",
+            Automaton::GameOfLife => "life",
         })
     }
 }
