@@ -75,7 +75,7 @@ impl Sandpile {
     }
 
     pub fn render(&mut self) {
-        let mut f = BufWriter::new(File::create(&format!("._{}/.out{}.ppm", self.name, lpad(self.idx, 5)))
+        let mut f = BufWriter::new(File::create(&format!(".sandpile_{}/.out{}.ppm", self.name, lpad(self.idx, 5)))
             .unwrap());
         write!(f, "P3\n{} {}\n25\n", self.wth, self.hgt).unwrap();
         for line in &self.field {

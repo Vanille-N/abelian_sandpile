@@ -7,29 +7,31 @@ use sandpile::*;
 
 fn main() {
     let name = String::from("multiple");
+    let algo = String::from("sandpile");
+
     let _ = Command::new("rm")
         .arg("-r")
-        .arg(&format!("{}.avi", name))
+        .arg(&format!("{}_{}.avi", algo, name))
         .status()
         .expect("Cleanup aborted");
-    fs::create_dir(format!("._{}", name))
-        .expect(&format!("could not create directory {}", name));
+    fs::create_dir(format!(".{}_{}", algo, name))
+        .expect(&format!("could not create directory {}_{}", algo, name));
     render(name.clone());
     eprintln!("All calculations done");
     let _ = Command::new("ffmpeg")
         .args(&["-pattern_type", "glob",
                 "-framerate", "25",
-                "-i", &format!("._{}/.*.ppm", name),
+                "-i", &format!(".{}_{}/.*.ppm", algo, name),
                 "-vcodec", "libx264",
                 "-crf", "15",
-                &format!("{}.avi", name)])
+                &format!("{}_{}.avi", algo, name)])
         .status()
         .unwrap_or_else(|e| {
             panic!("failed to execute process: {}", e)
         });
     let _ = Command::new("rm")
         .arg("-r")
-        .arg(&format!("._{}/", name))
+        .arg(&format!(".{}_{}/", algo, name))
         .status()
         .expect("Cleanup aborted");
 }
