@@ -5,10 +5,13 @@ The purpose of this project is:
 - to adapt such an interface with the goal of simulating discrete bidimentional cellular automata on finite rectangular grids
 - to implement specific such automata
 
-Work is currently in progress on abelian sandpiles, next versions may include :
+Work is currently in progress on:
+- Abelian sandpiles
+- Conway's game of life
+
+Next versions may include:
 - Brian's brain
 - Langton's ant
-- Conway's game of life
 
 
 It should be noted that this project relies heavily on `ffmpeg`: unless an easily usable alternative is found, portability to non-Linux systems is not an objective.
