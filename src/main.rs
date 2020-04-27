@@ -15,27 +15,31 @@ fn main() {
     cfg.build();
 }
 
-fn render(r: &mut Config) {
-    let mut pile = Sandpile::new(201, 201);
-    for i in 0..3000 {
-        pile.render(r);
-        pile.add(100, 100, 10);
-        pile.add(140, 150, 10);
-        pile.add(150, 40, 10);
-        pile.add(70, 50, 10);
-        pile.add(20, 150, 10);
-        pile.stabilize();
+fn render(cfg: &mut Config) {
+    match cfg.algo {
+        Automaton::Sandpile => {
+            let mut pile = Sandpile::new(201, 201);
+            for i in 0..3000 {
+                pile.render(cfg);
+                pile.add(100, 100, 10);
+                pile.add(140, 150, 10);
+                pile.add(150, 40, 10);
+                pile.add(70, 50, 10);
+                pile.add(20, 150, 10);
+                pile.stabilize();
+            }
+        }
     }
 }
 
 pub struct Config {
-    algo: String,
+    algo: Automaton,
     name: String,
     idx: usize,
 }
 
 impl Config {
-    pub fn make(algo: String, name: String) -> Self {
+    pub fn make(algo: Automaton, name: String) -> Self {
         Self {
             algo,
             name,
@@ -44,11 +48,11 @@ impl Config {
     }
 
     fn dir(&self) -> String {
-        format!(".{}_{}", self.algo, self.name)
+        format!(".{}_{}", self.algo.str(), self.name)
     }
 
     fn file(&self) -> String {
-        format!("{}_{}.avi", self.algo, self.name)
+        format!("{}_{}.avi", self.algo.str(), self.name)
     }
 
     fn frame(&mut self) -> String {
@@ -91,5 +95,17 @@ impl Config {
         let s = format!("{}", s);
         let l = s.len();
         format!("{}{}", "0".repeat(len - l), s)
+    }
+}
+
+pub enum Automaton {
+    Sandpile,
+}
+
+impl Automaton {
+    pub fn str(&self) -> String {
+        String::from(match self {
+            Automaton::Sandpile => "sand",
+        })
     }
 }
