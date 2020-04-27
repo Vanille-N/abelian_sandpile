@@ -9,3 +9,6 @@ Work is currently in progress on abelian sandpiles, next versions may include :
 - Brian's brain
 - Langton's ant
 - Conway's game of life
+
+
+It should be noted that this project relies heavily on `ffmpeg`: unless an easily usable alternative is found, portability to non-Linux systems is not an objective.
