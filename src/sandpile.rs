@@ -13,21 +13,17 @@ pub struct Sandpile {
     hgt: usize,
     wth: usize,
     schedule: VecDeque<(usize, usize)>,
-    idx: usize,
-    name: String,
     cnt: usize,
 }
 
 
 impl Sandpile {
-    pub fn new(i: usize, j: usize, name: String) -> Self {
+    pub fn new(i: usize, j: usize) -> Self {
         Sandpile {
             field: vec![vec![Grain { hgt: 0, scheduled: false }; j]; i],
             hgt: i,
             wth: j,
             schedule: VecDeque::new(),
-            idx: 0,
-            name,
             cnt: 0,
         }
     }
@@ -74,9 +70,9 @@ impl Sandpile {
         g.hgt > 3 && !g.scheduled
     }
 
-    pub fn render(&mut self) {
-        let mut f = BufWriter::new(File::create(&format!(".sandpile_{}/.out{}.ppm", self.name, lpad(self.idx, 5)))
-            .unwrap());
+    pub fn render(&mut self, cfg: &mut crate::Config) {
+        let name = cfg.frame();
+        let mut f = BufWriter::new(File::create(&name).unwrap());
         write!(f, "P3\n{} {}\n25\n", self.wth, self.hgt).unwrap();
         for line in &self.field {
             for g in line {
@@ -93,8 +89,7 @@ impl Sandpile {
             }
         }
         f.flush().unwrap();
-        eprintln!("Done rendering frame number {} : workload {}", self.idx, self.cnt);
-        self.idx += 1;
+        eprintln!("Done rendering frame {} : workload {}", name, self.cnt);
         self.cnt = 0;
     }
 
@@ -105,11 +100,4 @@ impl Sandpile {
             self.field[i][j].scheduled = true;
         }
     }
-}
-
-
-fn lpad(s: usize, len: usize) -> String {
-    let s = format!("{}", s);
-    let l = s.len();
-    format!("{}{}", "0".repeat(len - l), s)
 }
