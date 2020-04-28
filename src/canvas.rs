@@ -7,7 +7,6 @@ pub trait Colorize<T = Self>: Copy {
     fn color(&self) -> Color;
 }
 
-
 pub struct Canvas<T: Colorize> {
     hgt: usize,
     wth: usize,
@@ -36,16 +35,26 @@ impl<T: Colorize> Canvas<T> {
     }
 }
 
-impl<T: Colorize> std::ops::Index<[usize; 2]> for Canvas<T> {
+impl<T: Colorize> std::ops::Index<[isize; 2]> for Canvas<T> {
     type Output = T;
 
-    fn index(&self, idx: [usize; 2]) -> &Self::Output {
-        &self.tab[idx[0]][idx[1]]
+    fn index(&self, idx: [isize; 2]) -> &Self::Output {
+        &self.tab[mod_idx(idx[0], self.hgt)][mod_idx(idx[1], self.wth)]
     }
 }
 
-impl<T: Colorize> std::ops::IndexMut<[usize; 2]> for Canvas<T> {
-    fn index_mut(&mut self, idx: [usize; 2]) -> &mut T {
-        &mut self.tab[idx[0]][idx[1]]
+impl<T: Colorize> std::ops::IndexMut<[isize; 2]> for Canvas<T> {
+    fn index_mut(&mut self, idx: [isize; 2]) -> &mut T {
+        &mut self.tab[mod_idx(idx[0], self.hgt)][mod_idx(idx[1], self.wth)]
+    }
+}
+
+fn mod_idx(i: isize, n: usize) -> usize {
+    if i >= 0 {
+        (i % n as isize) as usize
+    } else {
+        let p = n / (-i as usize);
+        let i = (i as usize) + p * n;
+        i % n
     }
 }
