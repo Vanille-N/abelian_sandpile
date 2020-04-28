@@ -42,6 +42,25 @@ impl Colony {
             for j in 0..self.wth {
                 if rng.gen::<f64>() < p {
                     self.cnt += 1;
+                    self.field[[i as isize, j as isize]].birth();
+                }
+            }
+        }
+        self.update();
+    }
+
+    pub fn init_cluster(&mut self, f: f64, p: f64) {
+        let mut rng = rand::thread_rng();
+        let lo = |n| {
+            (n as f64 * (1. - f) / 2.).floor() as isize
+        };
+        let hi = |n| {
+            (n as f64 * (1. + f) / 2.).floor() as isize
+        };
+        for i in lo(self.hgt)..hi(self.hgt) {
+            for j in lo(self.wth)..hi(self.wth) {
+                if rng.gen::<f64>() < p {
+                    self.cnt += 1;
                     self.field[[i, j]].birth();
                 }
             }
