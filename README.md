@@ -8,10 +8,15 @@ The purpose of this project is:
 Work is currently in progress on:
 - Abelian sandpiles
 - Conway's game of life
+- Brian's brain
 
 Next versions may include:
-- Brian's brain
 - Langton's ant
+
+
+Planned modifications:
+- generalize to any Life-like automata
+- enable reading from text files to initialize grid
 
 
 It should be noted that this project relies heavily on `ffmpeg`: unless an easily usable alternative is found, portability to non-Linux systems is not an objective.
