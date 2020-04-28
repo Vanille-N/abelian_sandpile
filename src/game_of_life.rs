@@ -24,6 +24,8 @@ pub struct Colony {
     hgt: usize,
     wth: usize,
     cnt: usize,
+    born: usize,
+    dead: usize,
 }
 
 impl Colony {
@@ -33,6 +35,8 @@ impl Colony {
             hgt,
             wth,
             cnt: 0,
+            born: 0,
+            dead: 0,
         }
     }
 
@@ -71,7 +75,7 @@ impl Colony {
     pub fn update(&mut self) {
         for i in 0..self.hgt {
             for j in 0..self.wth {
-                self.field[[i as isize, j as isize]].update(&mut self.cnt);
+                self.field[[i as isize, j as isize]].update();
             }
         }
     }
@@ -90,6 +94,8 @@ impl Colony {
     }
 
     pub fn next(&mut self) {
+        self.born = 0;
+        self.dead = 0;
         for i in 0..self.hgt {
             for j in 0..self.wth {
                 let neigh = self.count_neigh(i as isize, j as isize);
@@ -97,16 +103,24 @@ impl Colony {
                 if cell.is_alive() {
                     match neigh {
                         2 | 3 => (),
-                        _ => cell.kill(),
+                        _ => {
+                            cell.kill();
+                            self.dead += 1;
+                        }
                     }
                 } else {
                     match neigh {
-                        3 => cell.birth(),
+                        3 => {
+                            cell.birth();
+                            self.born += 1;
+                        }
                         _ => (),
                     }
                 }
             }
         }
+        self.cnt += self.born;
+        self.cnt -= self.dead;
         self.update();
     }
 
@@ -114,7 +128,7 @@ impl Colony {
         let name = cfg.frame();
         self.field.render(&name);
 
-        eprintln!("Done generation {} : {} alive", name, self.cnt);
+        eprintln!("Done generation {} : {} alive (+{} ; -{})", name, self.cnt, self.born, self.dead);
     }
 }
 
@@ -135,16 +149,14 @@ impl Cell {
         self.succ = false;
     }
 
-    pub fn update(&mut self, cnt: &mut usize) {
+    pub fn update(&mut self) {
         if self.succ {
             if !self.curr {
                 self.curr = true;
-                *cnt += 1;
             }
         } else {
             if self.curr {
                 self.curr = false;
-                *cnt -= 1;
             }
         }
     }
