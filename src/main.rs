@@ -4,13 +4,15 @@ use std::process::Command;
 mod sandpile;
 mod canvas;
 mod game_of_life;
+mod brain;
 
 use sandpile::*;
 use game_of_life::*;
+use brain::*;
 
 fn main() {
     let name = String::from("rand");
-    let algo = Automaton::GameOfLife;
+    let algo = Automaton::Brain;
     let mut cfg = Config::new(algo, name, 25);
 
     cfg.prepare();
@@ -33,11 +35,19 @@ fn render(cfg: &mut Config) {
             }
         }
         Automaton::GameOfLife => {
-            let mut game = Colony::new(201, 201);
-            game.init_rand(0.1);
-            for i in 0..1000 {
+            let mut game = Colony::new(300, 500);
+            game.init_cluster(0.4, 0.3);
+            for i in 0..5000 {
                 game.render(cfg);
                 game.next();
+            }
+        }
+        Automaton::Brain => {
+            let mut brain = Brain::new(300, 400);
+            brain.init_cluster(0.05, 0.3);
+            for i in 0..5000 {
+                brain.render(cfg);
+                brain.next();
             }
         }
     }
@@ -119,6 +129,7 @@ impl Config {
 pub enum Automaton {
     Sandpile,
     GameOfLife,
+    Brain,
 }
 
 impl Automaton {
@@ -126,6 +137,7 @@ impl Automaton {
         String::from(match self {
             Automaton::Sandpile => "sand",
             Automaton::GameOfLife => "life",
+            Automaton::Brain => "brain",
         })
     }
 }
