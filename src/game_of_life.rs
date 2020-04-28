@@ -52,33 +52,29 @@ impl Colony {
     pub fn update(&mut self) {
         for i in 0..self.hgt {
             for j in 0..self.wth {
-                self.field[[i, j]].update(&mut self.cnt);
+                self.field[[i as isize, j as isize]].update(&mut self.cnt);
             }
         }
     }
 
-    fn count_neigh(&self, i: usize, j: usize) -> u8 {
+    fn count_neigh(&self, i: isize, j: isize) -> u8 {
         let mut res = 0;
-        if i > 0 {
-            if self.field[[i-1, j]].is_alive() { res += 1; }
-            if j > 0 && self.field[[i-1, j-1]].is_alive() { res += 1; }
-            if j < self.wth-1 && self.field[[i-1, j+1]].is_alive() { res += 1; }
-        }
-        if i < self.hgt-1 {
-            if self.field[[i+1, j]].is_alive() { res += 1; }
-            if j > 0 && self.field[[i+1, j-1]].is_alive() { res += 1; }
-            if j < self.wth-1 && self.field[[i+1, j+1]].is_alive() { res += 1; }
-        }
-        if j > 0 && self.field[[i, j-1]].is_alive() { res += 1; }
-        if j < self.wth-1 && self.field[[i, j+1]].is_alive() { res += 1; }
+        if self.field[[i-1, j]].is_alive() { res += 1; }
+        if self.field[[i-1, j-1]].is_alive() { res += 1; }
+        if self.field[[i-1, j+1]].is_alive() { res += 1; }
+        if self.field[[i+1, j]].is_alive() { res += 1; }
+        if self.field[[i+1, j-1]].is_alive() { res += 1; }
+        if self.field[[i+1, j+1]].is_alive() { res += 1; }
+        if self.field[[i, j-1]].is_alive() { res += 1; }
+        if self.field[[i, j+1]].is_alive() { res += 1; }
         res
     }
 
     pub fn next(&mut self) {
         for i in 0..self.hgt {
             for j in 0..self.wth {
-                let neigh = self.count_neigh(i, j);
-                let cell = &mut self.field[[i, j]];
+                let neigh = self.count_neigh(i as isize, j as isize);
+                let cell = &mut self.field[[i as isize, j as isize]];
                 if cell.is_alive() {
                     match neigh {
                         2 | 3 => (),

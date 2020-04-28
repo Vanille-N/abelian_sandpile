@@ -32,7 +32,7 @@ pub struct Sandpile {
     field: Canvas<Grain>,
     hgt: usize,
     wth: usize,
-    schedule: VecDeque<(usize, usize)>,
+    schedule: VecDeque<(isize, isize)>,
     cnt: usize,
 }
 
@@ -48,16 +48,13 @@ impl Sandpile {
         }
     }
 
-    fn topple(&mut self, i: usize, j: usize) {
+    fn topple(&mut self, i: isize, j: isize) {
         let fall = self.field[[i, j]].hgt / 4;
         self.field[[i, j]].scheduled = false;
         if fall > 0 {
             self.field[[i, j]].hgt -= fall * 4;
             for (mvi, mvj) in [(1, 0), (-1, 0), (0, 1), (0, -1)].iter() {
-                let (ni, nj) = (
-                    (i as isize + mvi) as usize,
-                    (j as isize + mvj) as usize
-                );
+                let (ni, nj) = ((i + mvi), (j + mvj));
                 if self.is_valid_idx(ni, nj) {
                     self.field[[ni, nj]].hgt += fall;
                     if self.is_unstable(ni, nj) {
@@ -81,11 +78,11 @@ impl Sandpile {
         }
     }
 
-    fn is_valid_idx(&self, i: usize, j: usize) -> bool {
-        i < self.hgt && j < self.wth
+    fn is_valid_idx(&self, i: isize, j: isize) -> bool {
+        0 < i && i < self.hgt as isize && 0 < j && j < self.wth as isize
     }
 
-    fn is_unstable(&self, i: usize, j: usize) -> bool {
+    fn is_unstable(&self, i: isize, j: isize) -> bool {
         let g = &self.field[[i, j]];
         g.hgt > 3 && !g.scheduled
     }
@@ -98,7 +95,7 @@ impl Sandpile {
         self.cnt = 0;
     }
 
-    pub fn add(&mut self, i: usize, j: usize, amount: usize) {
+    pub fn add(&mut self, i: isize, j: isize, amount: usize) {
         self.field[[i, j]].hgt += amount;
         if self.is_unstable(i, j) {
             self.schedule.push_back((i, j));
