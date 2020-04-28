@@ -3,11 +3,11 @@ use std::process::Command;
 
 mod sandpile;
 mod canvas;
-mod game_of_life;
+mod life;
 mod brain;
 
 use sandpile::*;
-use game_of_life::*;
+use life::*;
 use brain::*;
 
 fn main() {
@@ -35,7 +35,7 @@ fn render(cfg: &mut Config) {
             }
         }
         Automaton::GameOfLife => {
-            let mut game = Colony::new(300, 500);
+            let mut game = Life::new(300, 500);
             game.init_cluster(0.4, 0.3);
             for i in 0..5000 {
                 game.render(cfg);

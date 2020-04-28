@@ -19,7 +19,7 @@ impl Colorize for Cell {
     }
 }
 
-pub struct Colony {
+pub struct Life {
     field: Canvas<Cell>,
     hgt: usize,
     wth: usize,
@@ -28,7 +28,7 @@ pub struct Colony {
     dead: usize,
 }
 
-impl Colony {
+impl Life {
     pub fn new(hgt: usize, wth: usize) -> Self {
         Self {
             field: Canvas::new(hgt, wth, Cell::new()),
