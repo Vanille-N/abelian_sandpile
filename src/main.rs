@@ -3,16 +3,16 @@ use std::process::Command;
 
 mod sandpile;
 mod canvas;
-mod life;
+mod lifelike;
 mod brain;
 
 use sandpile::*;
-use life::*;
+use lifelike::*;
 use brain::*;
 
 fn main() {
     let name = String::from("rand");
-    let algo = Automaton::Brain;
+    let algo = Automaton::LifeLike(DAYNIGHT.to_string());
     let mut cfg = Config::new(algo, name, 25);
 
     cfg.prepare();
@@ -21,7 +21,7 @@ fn main() {
 }
 
 fn render(cfg: &mut Config) {
-    match cfg.algo {
+    match &cfg.algo {
         Automaton::Sandpile => {
             let mut pile = Sandpile::new(201, 201);
             for i in 0..3000 {
@@ -34,10 +34,10 @@ fn render(cfg: &mut Config) {
                 pile.stabilize();
             }
         }
-        Automaton::GameOfLife => {
-            let mut game = Life::new(300, 500);
+        Automaton::LifeLike(rules) => {
+            let mut game = LifeLike::new(300, 500, &rules);
             game.init_cluster(0.4, 0.3);
-            for i in 0..5000 {
+            for i in 0..3000 {
                 game.render(cfg);
                 game.next();
             }
@@ -128,16 +128,16 @@ impl Config {
 
 pub enum Automaton {
     Sandpile,
-    GameOfLife,
+    LifeLike(String),
     Brain,
 }
 
 impl Automaton {
     pub fn str(&self) -> String {
-        String::from(match self {
-            Automaton::Sandpile => "sand",
-            Automaton::GameOfLife => "life",
-            Automaton::Brain => "brain",
-        })
+        match self {
+            Automaton::Sandpile => String::from("sand"),
+            Automaton::LifeLike(rules) => format!("life-{}", rules),
+            Automaton::Brain => String::from("brain"),
+        }
     }
 }
