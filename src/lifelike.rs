@@ -19,7 +19,8 @@ impl Colorize for Cell {
     }
 }
 
-pub struct Life {
+pub struct LifeLike {
+    rules: Rules,
     field: Canvas<Cell>,
     hgt: usize,
     wth: usize,
@@ -28,9 +29,10 @@ pub struct Life {
     dead: usize,
 }
 
-impl Life {
-    pub fn new(hgt: usize, wth: usize) -> Self {
+impl LifeLike {
+    pub fn new(hgt: usize, wth: usize, rules: &str) -> Self {
         Self {
+            rules: Rules::new(rules),
             field: Canvas::new(hgt, wth, Cell::new()),
             hgt,
             wth,
@@ -80,7 +82,7 @@ impl Life {
         }
     }
 
-    fn count_neigh(&self, i: isize, j: isize) -> u8 {
+    fn count_neigh(&self, i: isize, j: isize) -> usize {
         let mut res = 0;
         if self.field[[i-1, j]].is_alive() { res += 1; }
         if self.field[[i-1, j-1]].is_alive() { res += 1; }
@@ -101,20 +103,14 @@ impl Life {
                 let neigh = self.count_neigh(i as isize, j as isize);
                 let cell = &mut self.field[[i as isize, j as isize]];
                 if cell.is_alive() {
-                    match neigh {
-                        2 | 3 => (),
-                        _ => {
-                            cell.kill();
-                            self.dead += 1;
-                        }
+                    if !self.rules.s[neigh] {
+                        cell.kill();
+                        self.dead += 1;
                     }
                 } else {
-                    match neigh {
-                        3 => {
-                            cell.birth();
-                            self.born += 1;
-                        }
-                        _ => (),
+                    if self.rules.b[neigh] {
+                        cell.birth();
+                        self.born += 1;
                     }
                 }
             }
@@ -165,3 +161,36 @@ impl Cell {
         self.curr
     }
 }
+
+#[derive(Clone, Copy)]
+struct Rules {
+    b: [bool; 9],
+    s: [bool; 9],
+}
+
+impl Rules {
+    pub fn new(s: &str) -> Self {
+        let mut r = Rules { b: [false; 9], s: [false; 9] };
+        let v: Vec<_> = s.split("-").collect();
+        let (b, s) = (v[0], v[1]);
+        for c in b.chars() {
+            r.b[c.to_digit(10).unwrap() as usize] = true;
+        }
+        for c in s.chars() {
+            r.s[c.to_digit(10).unwrap() as usize] = true;
+        }
+        r
+    }
+}
+
+pub const LIFE: &str = "3-23";
+pub const REPLICATOR: &str = "1357-1357";
+pub const SEEDS: &str = "2-";
+pub const NODEATH: &str = "3-012345678";
+pub const LIFE34: &str = "34-34";
+pub const DIAMOEBA: &str = "35678-5678";
+pub const X22: &str = "36-125";
+pub const HIGHLIFE: &str = "36-23";
+pub const DAYNIGHT: &str = "3678-34678";
+pub const MORLEY: &str = "368-245";
+pub const ANNEAL: &str = "4678-35678";
