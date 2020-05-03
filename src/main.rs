@@ -36,7 +36,7 @@ fn render(cfg: &mut Config) {
         }
         Automaton::LifeLike(rules) => {
             let mut game = LifeLike::new(300, 500, &rules);
-            game.init_cluster(0.4, 0.3);
+            game.init_cluster(0.2, 0.6);
             for i in 0..3000 {
                 game.render(cfg);
                 game.next();
