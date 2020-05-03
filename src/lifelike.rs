@@ -77,21 +77,38 @@ impl LifeLike {
     pub fn update(&mut self) {
         for i in 0..self.hgt {
             for j in 0..self.wth {
-                self.field[[i as isize, j as isize]].update();
+                self.field[[i, j]].update();
             }
         }
     }
 
-    fn count_neigh(&self, i: isize, j: isize) -> usize {
+    fn index_move(&self, i: usize, j: usize, mvi: isize, mvj: isize) -> [usize; 2] {
+        let (mut i, mut j) = (i, j);
+        match mvi {
+            -1 => if i == 0 { i = self.hgt - 1; } else { i -= 1;},
+            1 => if i == self.hgt - 1 { i = 0 } else { i += 1; },
+            0 => (),
+            _ => panic!("({}, {}) is not a neighbor: abs({}) > 1", mvi, mvj, mvi),
+        }
+        match mvj {
+            -1 => if i == 0 { i = self.hgt - 1; } else { i -= 1;},
+            1 => if i == self.hgt - 1 { i = 0 } else { i += 1; },
+            0 => (),
+            _ => panic!("({}, {}) is not a neighbor: abs({}) > 1", mvi, mvj, mvi),
+        }
+        [i, j]
+    }
+
+    fn count_neigh(&self, i: usize, j: usize) -> usize {
         let mut res = 0;
-        if self.field[[i-1, j]].is_alive() { res += 1; }
-        if self.field[[i-1, j-1]].is_alive() { res += 1; }
-        if self.field[[i-1, j+1]].is_alive() { res += 1; }
-        if self.field[[i+1, j]].is_alive() { res += 1; }
-        if self.field[[i+1, j-1]].is_alive() { res += 1; }
-        if self.field[[i+1, j+1]].is_alive() { res += 1; }
-        if self.field[[i, j-1]].is_alive() { res += 1; }
-        if self.field[[i, j+1]].is_alive() { res += 1; }
+        if self.field[self.index_move(i, j, -1, 0)].is_alive() { res += 1; }
+        if self.field[self.index_move(i, j, -1, -1)].is_alive() { res += 1; }
+        if self.field[self.index_move(i, j, -1, 1)].is_alive() { res += 1; }
+        if self.field[self.index_move(i, j, 1, 0)].is_alive() { res += 1; }
+        if self.field[self.index_move(i, j, 1, -1)].is_alive() { res += 1; }
+        if self.field[self.index_move(i, j, 1, 1)].is_alive() { res += 1; }
+        if self.field[self.index_move(i, j, 0, -1)].is_alive() { res += 1; }
+        if self.field[self.index_move(i, j, 0, 1)].is_alive() { res += 1; }
         res
     }
 

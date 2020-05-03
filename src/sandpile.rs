@@ -48,14 +48,45 @@ impl Sandpile {
         }
     }
 
-    fn topple(&mut self, i: isize, j: isize) {
+    fn is_valid_move(&self, i: usize, j: usize, mvi: isize, mvj: isize) -> bool {
+        match mvi {
+            -1 => if i == 0 { return false; },
+            1 => if i == self.hgt - 1 { return false; },
+            _ => ()
+        }
+        match mvj {
+            -1 => if j == 0 { return false; },
+            1 => if j == self.hgt - 1 { return false; },
+            _ => ()
+        }
+        true
+    }
+
+    fn index_move(&self, i: usize, j: usize, mvi: isize, mvj: isize) -> [usize; 2] {
+        let (mut i, mut j) = (i, j);
+        match mvi {
+            -1 => if i == 0 { i = self.hgt - 1; } else { i -= 1;},
+            1 => if i == self.hgt - 1 { i = 0 } else { i += 1; },
+            0 => (),
+            _ => panic!("({}, {}) is not a neighbor: abs({}) > 1", mvi, mvj, mvi),
+        }
+        match mvj {
+            -1 => if i == 0 { i = self.hgt - 1; } else { i -= 1;},
+            1 => if i == self.hgt - 1 { i = 0 } else { i += 1; },
+            0 => (),
+            _ => panic!("({}, {}) is not a neighbor: abs({}) > 1", mvi, mvj, mvi),
+        }
+        [i, j]
+    }
+
+    fn topple(&mut self, i: usize, j: usize) {
         let fall = self.field[[i, j]].hgt / 4;
         self.field[[i, j]].scheduled = false;
         if fall > 0 {
             self.field[[i, j]].hgt -= fall * 4;
             for (mvi, mvj) in [(1, 0), (-1, 0), (0, 1), (0, -1)].iter() {
-                let (ni, nj) = ((i + mvi), (j + mvj));
-                if self.is_valid_idx(ni, nj) {
+                if self.is_valid_move(i, j, *mvi, *mvj) {
+                    let [ni, nj] = self.index_move(i, j, *mvi, *mvj);
                     self.field[[ni, nj]].hgt += fall;
                     if self.is_unstable(ni, nj) {
                         self.schedule.push_back((ni, nj));
