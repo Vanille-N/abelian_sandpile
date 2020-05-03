@@ -49,7 +49,7 @@ impl Brain {
             for j in 0..self.wth {
                 if rng.gen::<f64>() < p {
                     self.fired += 1;
-                    self.field[[i as isize, j as isize]].fire();
+                    self.field[[i, j]].fire();
                 }
             }
         }
@@ -59,10 +59,10 @@ impl Brain {
     pub fn init_cluster(&mut self, f: f64, p: f64) {
         let mut rng = rand::thread_rng();
         let lo = |n| {
-            (n as f64 * (1. - f) / 2.).floor() as isize
+            (n as f64 * (1. - f) / 2.).floor() as usize
         };
         let hi = |n| {
-            (n as f64 * (1. + f) / 2.).floor() as isize
+            (n as f64 * (1. + f) / 2.).floor() as usize
         };
         for i in lo(self.hgt)..hi(self.hgt) {
             for j in lo(self.wth)..hi(self.wth) {
@@ -100,16 +100,16 @@ impl Brain {
         self.fired = 0;
         for i in 0..self.hgt {
             for j in 0..self.wth {
-                match self.field[[i as isize, j as isize]].curr {
+                match self.field[[i, j]].curr {
                     State::Firing => {
-                        self.field[[i as isize, j as isize]].refactor();
+                        self.field[[i, j]].refactor();
                     }
                     State::Dying => {
-                        self.field[[i as isize, j as isize]].kill();
+                        self.field[[i, j]].kill();
                     }
                     State::Ready => {
-                        if self.count_neigh(i as isize, j as isize) == 2 {
-                            self.field[[i as isize, j as isize]].fire();
+                        if self.count_neigh(i, j) == 2 {
+                            self.field[[i, j]].fire();
                             self.fired += 1;
                         }
                     }

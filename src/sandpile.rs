@@ -32,7 +32,7 @@ pub struct Sandpile {
     field: Canvas<Grain>,
     hgt: usize,
     wth: usize,
-    schedule: VecDeque<(isize, isize)>,
+    schedule: VecDeque<(usize, usize)>,
     cnt: usize,
 }
 
@@ -78,11 +78,7 @@ impl Sandpile {
         }
     }
 
-    fn is_valid_idx(&self, i: isize, j: isize) -> bool {
-        0 < i && i < self.hgt as isize && 0 < j && j < self.wth as isize
-    }
-
-    fn is_unstable(&self, i: isize, j: isize) -> bool {
+    fn is_unstable(&self, i: usize, j: usize) -> bool {
         let g = &self.field[[i, j]];
         g.hgt > 3 && !g.scheduled
     }
@@ -95,7 +91,7 @@ impl Sandpile {
         self.cnt = 0;
     }
 
-    pub fn add(&mut self, i: isize, j: isize, amount: usize) {
+    pub fn add(&mut self, i: usize, j: usize, amount: usize) {
         self.field[[i, j]].hgt += amount;
         if self.is_unstable(i, j) {
             self.schedule.push_back((i, j));

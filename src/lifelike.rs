@@ -48,7 +48,7 @@ impl LifeLike {
             for j in 0..self.wth {
                 if rng.gen::<f64>() < p {
                     self.cnt += 1;
-                    self.field[[i as isize, j as isize]].birth();
+                    self.field[[i, j]].birth();
                 }
             }
         }
@@ -58,10 +58,10 @@ impl LifeLike {
     pub fn init_cluster(&mut self, f: f64, p: f64) {
         let mut rng = rand::thread_rng();
         let lo = |n| {
-            (n as f64 * (1. - f) / 2.).floor() as isize
+            (n as f64 * (1. - f) / 2.).floor() as usize
         };
         let hi = |n| {
-            (n as f64 * (1. + f) / 2.).floor() as isize
+            (n as f64 * (1. + f) / 2.).floor() as usize
         };
         for i in lo(self.hgt)..hi(self.hgt) {
             for j in lo(self.wth)..hi(self.wth) {
@@ -100,8 +100,8 @@ impl LifeLike {
         self.dead = 0;
         for i in 0..self.hgt {
             for j in 0..self.wth {
-                let neigh = self.count_neigh(i as isize, j as isize);
-                let cell = &mut self.field[[i as isize, j as isize]];
+                let neigh = self.count_neigh(i, j);
+                let cell = &mut self.field[[i, j]];
                 if cell.is_alive() {
                     if !self.rules.s[neigh] {
                         cell.kill();
