@@ -7,15 +7,12 @@ The purpose of this project is:
 
 Work is currently in progress on:
 - Abelian sandpiles
-- Conway's game of life
+- Conway's game of life and any other life-like automata
 - Brian's brain
-
-Next versions may include:
 - Langton's ant
 
 
 Planned modifications:
-- generalize to any Life-like automata
 - enable reading from text files to initialize grid
 
 
