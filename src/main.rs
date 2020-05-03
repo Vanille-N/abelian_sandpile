@@ -5,14 +5,16 @@ mod sandpile;
 mod canvas;
 mod lifelike;
 mod brain;
+mod langton;
 
 use sandpile::*;
 use lifelike::*;
 use brain::*;
+use langton::*;
 
 fn main() {
     let name = String::from("rand");
-    let algo = Automaton::LifeLike(DAYNIGHT.to_string());
+    let algo = Automaton::Langton;
     let mut cfg = Config::new(algo, name, 25);
 
     cfg.prepare();
@@ -48,6 +50,14 @@ fn render(cfg: &mut Config) {
             for i in 0..5000 {
                 brain.render(cfg);
                 brain.next();
+            }
+        }
+        Automaton::Langton => {
+            let mut anthill = Langton::new(500, 500);
+            anthill.add_ant([50, 50], Dir::N);
+            for i in 0..1000 {
+                anthill.multi(100);
+                anthill.render(cfg);
             }
         }
     }
@@ -130,6 +140,7 @@ pub enum Automaton {
     Sandpile,
     LifeLike(String),
     Brain,
+    Langton,
 }
 
 impl Automaton {
@@ -138,6 +149,7 @@ impl Automaton {
             Automaton::Sandpile => String::from("sand"),
             Automaton::LifeLike(rules) => format!("life-{}", rules),
             Automaton::Brain => String::from("brain"),
+            Automaton::Langton => String::from("ant"),
         }
     }
 }
