@@ -6,10 +6,10 @@ The purpose of this project is:
 - to implement specific such automata
 
 Work is currently in progress on:
-- Abelian sandpiles
-- Conway's game of life and any other life-like automata
-- Brian's brain
-- Langton's ant
+- Abelian sandpiles (https://en.wikipedia.org/wiki/Abelian_sandpile_model)
+- Conway's game of life and any other life-like automata (https://en.wikipedia.org/wiki/Life-like_cellular_automaton)
+- Brian's brain (https://en.wikipedia.org/wiki/Brian%27s_Brain)
+- Langton's ant (https://en.wikipedia.org/wiki/Langton%27s_ant)
 
 
 Planned modifications:
