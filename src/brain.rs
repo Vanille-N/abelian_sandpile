@@ -92,10 +92,10 @@ impl Brain {
             _ => panic!("({}, {}) is not a neighbor: abs({}) > 1", mvi, mvj, mvi),
         }
         match mvj {
-            -1 => if i == 0 { i = self.hgt - 1; } else { i -= 1;},
-            1 => if i == self.hgt - 1 { i = 0 } else { i += 1; },
+            -1 => if j == 0 { j = self.hgt - 1; } else { j -= 1;},
+            1 => if j == self.hgt - 1 { j = 0 } else { j += 1; },
             0 => (),
-            _ => panic!("({}, {}) is not a neighbor: abs({}) > 1", mvi, mvj, mvi),
+            _ => panic!("({}, {}) is not a neighbor: abs({}) > 1", mvi, mvj, mvj),
         }
         [i, j]
     }
