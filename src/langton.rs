@@ -34,7 +34,7 @@ pub struct Langton {
 }
 
 impl Dir {
-    pub fn turn(&self, t: Turn) -> Dir {
+    fn turn(&self, t: Turn) -> Dir {
         match self {
             Dir::N => if t == Turn::Left { Dir::W } else { Dir::E },
             Dir::S => if t == Turn::Left { Dir::E } else { Dir::W },
