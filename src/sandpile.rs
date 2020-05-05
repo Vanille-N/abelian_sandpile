@@ -56,7 +56,7 @@ impl Sandpile {
         }
         match mvj {
             -1 => if j == 0 { return false; },
-            1 => if j == self.hgt - 1 { return false; },
+            1 => if j == self.wth - 1 { return false; },
             _ => ()
         }
         true
@@ -71,8 +71,8 @@ impl Sandpile {
             _ => panic!("({}, {}) is not a neighbor: abs({}) > 1", mvi, mvj, mvi),
         }
         match mvj {
-            -1 => if j == 0 { j = self.hgt - 1; } else { j -= 1;},
-            1 => if j == self.hgt - 1 { j = 0 } else { j += 1; },
+            -1 => if j == 0 { j = self.wth - 1; } else { j -= 1;},
+            1 => if j == self.wth - 1 { j = 0 } else { j += 1; },
             0 => (),
             _ => panic!("({}, {}) is not a neighbor: abs({}) > 1", mvi, mvj, mvj),
         }
