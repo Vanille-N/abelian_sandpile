@@ -26,7 +26,7 @@ fn render(cfg: &mut Config) {
     match &cfg.algo {
         Automaton::Sandpile => {
             let mut pile = Sandpile::new(201, 201);
-            for i in 0..3000 {
+            for _ in 0..3000 {
                 pile.render(cfg);
                 pile.add(100, 100, 10);
                 pile.add(140, 150, 10);
@@ -39,7 +39,7 @@ fn render(cfg: &mut Config) {
         Automaton::LifeLike(rules) => {
             let mut game = LifeLike::new(300, 500, &rules);
             game.init_cluster(0.2, 0.6);
-            for i in 0..3000 {
+            for _ in 0..3000 {
                 game.render(cfg);
                 game.next();
             }
@@ -47,7 +47,7 @@ fn render(cfg: &mut Config) {
         Automaton::Brain => {
             let mut brain = Brain::new(300, 400);
             brain.init_cluster(0.05, 0.3);
-            for i in 0..5000 {
+            for _ in 0..5000 {
                 brain.render(cfg);
                 brain.next();
             }
@@ -55,7 +55,10 @@ fn render(cfg: &mut Config) {
         Automaton::Langton => {
             let mut anthill = Langton::new(500, 500);
             anthill.add_ant([50, 50], Dir::N);
-            for i in 0..1000 {
+            anthill.add_ant([100, 100], Dir::S);
+            anthill.add_ant([100, 110], Dir::E);
+            anthill.add_ant([50, 400], Dir::W);
+            for _ in 0..1000 {
                 anthill.multi(100);
                 anthill.render(cfg);
             }

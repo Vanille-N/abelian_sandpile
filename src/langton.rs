@@ -82,7 +82,7 @@ impl Langton {
     }
 
     pub fn multi(&mut self, n: usize) {
-        for i in 0..n {
+        for _ in 0..n {
             self.next();
         }
     }
