@@ -5,7 +5,11 @@ The purpose of this project is:
 - to adapt such an interface with the goal of simulating discrete bidimentional cellular automata on rectangular or torus grids
 - to implement specific such automata
 
-![Brian's brain](https://github.com/Vanille-N/cellular_automata/blob/master/brain_capture.gif)
+## Previews
+
+![Brian's brain](https://github.com/Vanille-N/cellular_automata/blob/master/img/brain_capture.gif)
+
+![Gliders](https://github.com/Vanille-N/cellular_automata/blob/master/img/glider_gun.gif)
 
 Work is currently in progress on:
 - Abelian sandpiles (https://en.wikipedia.org/wiki/Abelian_sandpile_model)
