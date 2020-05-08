@@ -127,13 +127,13 @@ impl LifeLike {
         match mvj {
             -1 => {
                 if j == 0 {
-                    j = self.hgt - 1;
+                    j = self.wth - 1;
                 } else {
                     j -= 1;
                 }
             }
             1 => {
-                if j == self.hgt - 1 {
+                if j == self.wth - 1 {
                     j = 0
                 } else {
                     j += 1;
