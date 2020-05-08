@@ -5,6 +5,8 @@ The purpose of this project is:
 - to adapt such an interface with the goal of simulating discrete bidimentional cellular automata on rectangular or torus grids
 - to implement specific such automata
 
+![Brian's brain](https://github.com/Vanille-N/cellular_automata/blob/master/brain_capture.gif)
+
 Work is currently in progress on:
 - Abelian sandpiles (https://en.wikipedia.org/wiki/Abelian_sandpile_model)
 - Conway's game of life and any other life-like automata (https://en.wikipedia.org/wiki/Life-like_cellular_automaton)
