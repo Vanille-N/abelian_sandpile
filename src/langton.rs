@@ -1,4 +1,5 @@
 use crate::canvas::*;
+use rand::Rng;
 
 type Mark = usize;
 
@@ -69,6 +70,14 @@ impl Langton {
 
     pub fn add_ant(&mut self, pos: Pos, dir: Dir) {
         self.ants.push(Ant { pos, dir });
+    }
+
+    pub fn add_rand_ant(&mut self) {
+        let mut rng = rand::thread_rng();
+        self.ants.push(Ant {
+            pos: [rng.gen_range(0, self.hgt), rng.gen_range(0, self.wth)],
+            dir: Dir::from(rng.gen_range(0, 4)),
+        });
     }
 
     pub fn next(&mut self) {
