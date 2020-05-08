@@ -15,8 +15,8 @@ use lifelike::*;
 use sandpile::*;
 
 fn main() {
-    let name = String::from("rand");
-    let algo = Automaton::Langton;
+    let name = String::from("gun");
+    let algo = Automaton::LifeLike(String::from(LIFE));
     let mut cfg = Config::new(algo, name, 25);
 
     cfg.prepare();
@@ -39,9 +39,9 @@ fn render(cfg: &mut Config) {
             }
         }
         Automaton::LifeLike(rules) => {
-            let mut game = LifeLike::new(300, 500, &rules);
-            game.init_cluster(0.2, 0.6);
-            for _ in 0..3000 {
+            let mut game = LifeLike::new(100, 100, &rules);
+            game.add_from_file("data/glider_gun.txt", 5, 5);
+            for _ in 0..1000 {
                 game.render(cfg);
                 game.next();
             }
