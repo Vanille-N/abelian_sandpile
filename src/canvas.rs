@@ -33,6 +33,10 @@ impl<T: Colorize> Canvas<T> {
         }
         f.flush().unwrap();
     }
+
+    pub fn mod_idx(&mut self, i: isize, j: isize) -> &mut T {
+        &mut self.tab[mod_idx(i, self.hgt)][mod_idx(j, self.wth)]
+    }
 }
 
 impl<T: Colorize> std::ops::Index<[usize; 2]> for Canvas<T> {
