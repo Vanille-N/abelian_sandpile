@@ -70,6 +70,32 @@ impl LifeLike {
         self.update();
     }
 
+    pub fn add_from_file(&mut self, file: &str, i0: usize, j0: usize) {
+        let data = std::fs::read_to_string(file)
+            .unwrap();
+        let mut i = i0;
+        let mut j = j0;
+        for c in data.chars() {
+            match c {
+                '\n' => {
+                    i += 1;
+                    j = j0;
+                }
+                'x' => {
+                    self.field.mod_idx(i as isize, j as isize).birth();
+                    j += 1;
+                }
+                '.' => {
+                    self.field.mod_idx(i as isize, j as isize).kill();
+                    j += 1;
+                }
+                ' ' => j += 1,
+                c => panic!("unknown character {}", c),
+            }
+        }
+        self.update();
+    }
+
     pub fn update(&mut self) {
         for i in 0..self.hgt {
             for j in 0..self.wth {
