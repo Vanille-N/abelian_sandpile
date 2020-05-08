@@ -1,5 +1,5 @@
-use std::collections::VecDeque;
 use crate::canvas::*;
+use std::collections::VecDeque;
 
 #[derive(Clone, Copy)]
 struct Grain {
@@ -36,7 +36,6 @@ pub struct Sandpile {
     cnt: usize,
 }
 
-
 impl Sandpile {
     pub fn new(i: usize, j: usize) -> Self {
         Sandpile {
@@ -50,14 +49,30 @@ impl Sandpile {
 
     fn is_valid_move(&self, i: usize, j: usize, mvi: isize, mvj: isize) -> bool {
         match mvi {
-            -1 => if i == 0 { return false; },
-            1 => if i == self.hgt - 1 { return false; },
-            _ => ()
+            -1 => {
+                if i == 0 {
+                    return false;
+                }
+            }
+            1 => {
+                if i == self.hgt - 1 {
+                    return false;
+                }
+            }
+            _ => (),
         }
         match mvj {
-            -1 => if j == 0 { return false; },
-            1 => if j == self.wth - 1 { return false; },
-            _ => ()
+            -1 => {
+                if j == 0 {
+                    return false;
+                }
+            }
+            1 => {
+                if j == self.wth - 1 {
+                    return false;
+                }
+            }
+            _ => (),
         }
         true
     }
@@ -65,14 +80,38 @@ impl Sandpile {
     fn index_move(&self, i: usize, j: usize, mvi: isize, mvj: isize) -> [usize; 2] {
         let (mut i, mut j) = (i, j);
         match mvi {
-            -1 => if i == 0 { i = self.hgt - 1; } else { i -= 1;},
-            1 => if i == self.hgt - 1 { i = 0 } else { i += 1; },
+            -1 => {
+                if i == 0 {
+                    i = self.hgt - 1;
+                } else {
+                    i -= 1;
+                }
+            }
+            1 => {
+                if i == self.hgt - 1 {
+                    i = 0
+                } else {
+                    i += 1;
+                }
+            }
             0 => (),
             _ => panic!("({}, {}) is not a neighbor: abs({}) > 1", mvi, mvj, mvi),
         }
         match mvj {
-            -1 => if j == 0 { j = self.wth - 1; } else { j -= 1;},
-            1 => if j == self.wth - 1 { j = 0 } else { j += 1; },
+            -1 => {
+                if j == 0 {
+                    j = self.wth - 1;
+                } else {
+                    j -= 1;
+                }
+            }
+            1 => {
+                if j == self.wth - 1 {
+                    j = 0
+                } else {
+                    j += 1;
+                }
+            }
             0 => (),
             _ => panic!("({}, {}) is not a neighbor: abs({}) > 1", mvi, mvj, mvj),
         }

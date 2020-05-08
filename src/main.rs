@@ -3,16 +3,16 @@
 use std::fs;
 use std::process::Command;
 
-mod sandpile;
-mod canvas;
-mod lifelike;
 mod brain;
+mod canvas;
 mod langton;
+mod lifelike;
+mod sandpile;
 
-use sandpile::*;
-use lifelike::*;
 use brain::*;
 use langton::*;
+use lifelike::*;
+use sandpile::*;
 
 fn main() {
     let name = String::from("rand");
@@ -55,11 +55,10 @@ fn render(cfg: &mut Config) {
             }
         }
         Automaton::Langton => {
-            let mut anthill = Langton::new(500, 500);
-            anthill.add_ant([50, 50], Dir::N);
-            anthill.add_ant([100, 100], Dir::S);
-            anthill.add_ant([100, 110], Dir::E);
-            anthill.add_ant([50, 400], Dir::W);
+            let mut anthill = Langton::new(1000, 1000);
+            for _ in 0..100 {
+                anthill.add_rand_ant();
+            }
             for _ in 0..1000 {
                 anthill.multi(100);
                 anthill.render(cfg);
@@ -110,23 +109,27 @@ impl Config {
             .arg(&self.dir())
             .status()
             .expect("Cleanup aborted");
-        fs::create_dir(self.dir())
-            .expect(&format!("could not create directory {}", self.dir()));
+        fs::create_dir(self.dir()).expect(&format!("could not create directory {}", self.dir()));
     }
 
     pub fn build(&self) {
         eprintln!("All calculations done");
         let _ = Command::new("ffmpeg")
-            .args(&["-pattern_type", "glob",
-                    "-framerate", "25",
-                    "-i", &format!("{}/*.ppm", self.dir()),
-                    "-vcodec", "libx264",
-                    "-crf", &format!("{}", self.framerate),
-                    &self.file()])
+            .args(&[
+                "-pattern_type",
+                "glob",
+                "-framerate",
+                "25",
+                "-i",
+                &format!("{}/*.ppm", self.dir()),
+                "-vcodec",
+                "libx264",
+                "-crf",
+                &format!("{}", self.framerate),
+                &self.file(),
+            ])
             .status()
-            .unwrap_or_else(|e| {
-                panic!("failed to execute process: {}", e)
-            });
+            .unwrap_or_else(|e| panic!("failed to execute process: {}", e));
         let _ = Command::new("rm")
             .arg("-r")
             .arg(&self.dir())

@@ -37,10 +37,44 @@ pub struct Langton {
 impl Dir {
     fn turn(&self, t: Turn) -> Dir {
         match self {
-            Dir::N => if t == Turn::Left { Dir::W } else { Dir::E },
-            Dir::S => if t == Turn::Left { Dir::E } else { Dir::W },
-            Dir::E => if t == Turn::Left { Dir::N } else { Dir::S },
-            Dir::W => if t == Turn::Left { Dir::S } else { Dir::N },
+            Dir::N => {
+                if t == Turn::Left {
+                    Dir::W
+                } else {
+                    Dir::E
+                }
+            }
+            Dir::S => {
+                if t == Turn::Left {
+                    Dir::E
+                } else {
+                    Dir::W
+                }
+            }
+            Dir::E => {
+                if t == Turn::Left {
+                    Dir::N
+                } else {
+                    Dir::S
+                }
+            }
+            Dir::W => {
+                if t == Turn::Left {
+                    Dir::S
+                } else {
+                    Dir::N
+                }
+            }
+        }
+    }
+
+    fn from(i: usize) -> Self {
+        match i {
+            0 => Dir::N,
+            1 => Dir::E,
+            2 => Dir::S,
+            3 => Dir::W,
+            _ => panic!("there are only 4 possible directions"),
         }
     }
 }
@@ -54,7 +88,6 @@ impl Colorize for Mark {
         }
     }
 }
-
 
 impl Langton {
     pub fn new(hgt: usize, wth: usize) -> Self {
@@ -116,9 +149,33 @@ impl Ant {
 
 fn mv(p: Pos, d: Dir, imax: usize, jmax: usize) -> Pos {
     match d {
-        Dir::N => if p[0] == 0 { [imax-1, p[1]] } else { [p[0]-1, p[1]] },
-        Dir::S => if p[0] == imax-1 { [0, p[1]] } else { [p[0]+1, p[1]] },
-        Dir::W => if p[1] == 0 { [p[0], jmax-1] } else { [p[0], p[1]-1] },
-        Dir::E => if p[1] == jmax-1 { [p[0], 0] } else { [p[0], p[1]+1] },
+        Dir::N => {
+            if p[0] == 0 {
+                [imax - 1, p[1]]
+            } else {
+                [p[0] - 1, p[1]]
+            }
+        }
+        Dir::S => {
+            if p[0] == imax - 1 {
+                [0, p[1]]
+            } else {
+                [p[0] + 1, p[1]]
+            }
+        }
+        Dir::W => {
+            if p[1] == 0 {
+                [p[0], jmax - 1]
+            } else {
+                [p[0], p[1] - 1]
+            }
+        }
+        Dir::E => {
+            if p[1] == jmax - 1 {
+                [p[0], 0]
+            } else {
+                [p[0], p[1] + 1]
+            }
+        }
     }
 }
