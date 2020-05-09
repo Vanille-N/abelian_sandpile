@@ -39,8 +39,8 @@ fn render(cfg: &mut Config) {
             }
         }
         Automaton::LifeLike(rules) => {
-            let mut game = LifeLike::new(100, 100, &rules);
-            game.add_from_file("data/glider_gun.txt", 5, 5);
+            let mut game = LifeLike::new(50, 50, &rules);
+            game.add_from_file("data/weekender_tagalong.txt", 5, 5);
             for _ in 0..1000 {
                 game.render(cfg);
                 game.next();
