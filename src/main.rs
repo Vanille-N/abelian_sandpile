@@ -39,10 +39,9 @@ fn render(cfg: &mut Config) {
             }
         }
         Automaton::LifeLike(rules) => {
-            let mut game = LifeLike::new(100, 200, &rules);
-            game.add_from_file("data/glider_gun.txt", 5, 5, Rotate::None);
-            game.add_from_file("data/glider_gun.txt", 100, 120, Rotate::Double);
-            for _ in 0..1000 {
+            let mut game = LifeLike::new(200, 300, &rules);
+            game.add_from_file("data/unknown.txt", 5, 150, Rotate::None);
+            for _ in 0..5000 {
                 game.render(cfg);
                 game.next();
             }
@@ -124,7 +123,7 @@ impl Config {
                 "-i",
                 &format!("{}/*.ppm", self.dir()),
                 "-vf",
-                "scale=500:-1",         // rescale to 500x? (keep aspect ratio)
+                "scale=1000:-1",         // rescale to 1000px (keep aspect ratio)
                 "-sws_flags",
                 "neighbor",             // no interpolation
                 "-vcodec",
