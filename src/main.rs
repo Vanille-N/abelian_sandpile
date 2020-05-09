@@ -39,8 +39,8 @@ fn render(cfg: &mut Config) {
             }
         }
         Automaton::LifeLike(rules) => {
-            let mut game = LifeLike::new(50, 50, &rules);
-            game.add_from_file("data/weekender_tagalong.txt", 5, 5);
+            let mut game = LifeLike::new(100, 200, &rules);
+            game.add_from_file("data/glider_gun.txt", 5, 5);
             for _ in 0..1000 {
                 game.render(cfg);
                 game.next();
@@ -117,11 +117,15 @@ impl Config {
         let _ = Command::new("ffmpeg")
             .args(&[
                 "-pattern_type",
-                "glob",
+                "glob",                 // find all frames according to glob pattern
                 "-framerate",
-                "25",
+                "25",                   // 25 FPS
                 "-i",
                 &format!("{}/*.ppm", self.dir()),
+                "-vf",
+                "scale=500:-1",         // rescale to 500x? (keep aspect ratio)
+                "-sws_flags",
+                "neighbor",             // no interpolation
                 "-vcodec",
                 "libx264",
                 "-crf",
