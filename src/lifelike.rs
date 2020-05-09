@@ -70,7 +70,7 @@ impl LifeLike {
         self.update();
     }
 
-    pub fn add_from_file(&mut self, file: &str, i0: usize, j0: usize) {
+    pub fn add_from_file(&mut self, file: &str, i0: isize, j0: isize, rot: Rotate) {
         let data = std::fs::read_to_string(file)
             .unwrap();
         let mut i = i0;
@@ -78,18 +78,17 @@ impl LifeLike {
         for c in data.chars() {
             match c {
                 '\n' => {
-                    i += 1;
-                    j = j0;
+                    rot.newline(&mut i, &mut j, i0, j0);
                 }
                 'x' => {
-                    self.field.mod_idx(i as isize, j as isize).birth();
-                    j += 1;
+                    self.field.mod_idx(i, j).birth();
+                    rot.next(&mut i, &mut j);
                 }
                 '.' => {
-                    self.field.mod_idx(i as isize, j as isize).kill();
-                    j += 1;
+                    self.field.mod_idx(i, j).kill();
+                    rot.next(&mut i, &mut j);
                 }
-                ' ' => j += 1,
+                ' ' => rot.next(&mut i, &mut j),
                 c => panic!("unknown character {}", c),
             }
         }
@@ -278,3 +277,42 @@ pub const HIGHLIFE: &str = "36-23";
 pub const DAYNIGHT: &str = "3678-34678";
 pub const MORLEY: &str = "368-245";
 pub const ANNEAL: &str = "4678-35678";
+
+pub enum Rotate {
+    None,
+    Left,
+    Right,
+    Double,
+}
+
+impl Rotate {
+    pub fn next(&self, i: &mut isize, j: &mut isize) {
+        match self {
+            Rotate::None => *j += 1,
+            Rotate::Left => *i -= 1,
+            Rotate::Right => *i += 1,
+            Rotate::Double => *j -= 1,
+        }
+    }
+
+    pub fn newline(&self, i: &mut isize, j: &mut isize, i0: isize, j0: isize) {
+        match self {
+            Rotate::None => {
+                *i += 1;
+                *j = j0;
+            }
+            Rotate::Left => {
+                *j += 1;
+                *i = i0;
+            }
+            Rotate::Right => {
+                *j -= 1;
+                *i = i0;
+            }
+            Rotate::Double => {
+                *i -= 1;
+                *j = j0;
+            }
+        }
+    }
+}
