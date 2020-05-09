@@ -9,7 +9,8 @@ The purpose of this project is:
 
 ## Preview
 
-![Brian's brain](img/brain_capture.gif)
+<img src="img/brain_capture.gif">
+<img src="img/glider_gun.gif">
 
 ## How to build and run
 
