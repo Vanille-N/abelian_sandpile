@@ -2,10 +2,10 @@
 
 import pyautogui as gui
 import time as t
+import random as rnd
 
 gui.FAILSAFE = True
-gui.PAUSE = 0.02
-
+gui.PAUSE = 0.0
 
 def countdown(n):
     if (n == 0):
@@ -44,18 +44,41 @@ def identify_color(color, ref):
             min_idx = i
     return min_idx
 
+def randomize(x, y, radius):
+    #print("a", x, y)
+    x += rnd.random()*radius
+    y += rnd.random()*radius
+    gui.moveTo(x, y)
+    #print("b", x, y)
+    return (x, y)
+
+def majority(sample, chars):
+    cnt = [[0, c] for c in chars]
+    for s in sample:
+        cnt[s][0] += 1
+    cnt.sort(reverse=True)
+    #print(cnt)
+    if cnt[0][0] > cnt[1][0] * 2:
+        return cnt[0][1]
+    else:
+        return input("Unsure: {}, please resolve manually: ".format(cnt))
+
 def main():
     ul, dr = calibrate_zone()
     cells = [calibrate_color("dead"), calibrate_color("live")]
+    print(cells)
     scr = gui.screenshot()
     hgt = int(input("Height ? "))
     wth = int(input("Width ? "))
+    radius = min(hgt / abs(dr.y - ul.y) / 3, wth / abs(dr.x - ul.x) / 3)
+    print("radius: {}".format(radius))
     for ifrac in range(hgt):
         for jfrac in range(wth):
             i = ul.y + (dr.y - ul.y) * ifrac / (hgt-1)
             j = ul.x + (dr.x - ul.x) * jfrac / (wth-1)
             gui.moveTo(j, i)
-            print(".x"[identify_color(scr.getpixel((j, i)), cells)], end="")
+            sample = [identify_color(scr.getpixel(randomize(j, i, radius)), cells) for _ in range(10)]
+            print(majority(sample, ".x"), end="")
         print()
 
 main()
