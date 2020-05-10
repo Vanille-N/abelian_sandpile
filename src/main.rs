@@ -16,8 +16,8 @@ use lifelike::*;
 use sandpile::*;
 
 fn main() {
-    let name = String::from("gun");
-    let algo = Automaton::LifeLike(String::from(LIFE));
+    let name = String::from("cluster");
+    let algo = Automaton::Langton;
     let mut cfg = Config::new(algo, name, 25);
 
     cfg.prepare();
@@ -29,19 +29,29 @@ fn render(cfg: &mut Config) {
     match &cfg.algo {
         Automaton::Sandpile => {
             let mut pile = Sandpile::new(201, 201);
-            for _ in 0..3000 {
+            for _ in 0..1000 {
                 pile.render(cfg);
-                pile.add(100, 100, 10);
-                pile.add(140, 150, 10);
-                pile.add(150, 40, 10);
-                pile.add(70, 50, 10);
-                pile.add(20, 150, 10);
+                pile.add(100, 100, 5);
+                pile.add(110, 110, 10);
+                pile.add(120, 120, 20);
+                pile.add(90, 90, 10);
+                pile.add(80, 80, 20);
                 pile.stabilize();
             }
         }
         Automaton::LifeLike(rules) => {
             let mut game = LifeLike::new(200, 300, &rules);
-            game.add_from_file("data/bricklayer.txt", 5, 150, Rotate::None);
+            game.add_from_file("data/glider_gun.txt", 5, 100, T_NONE);
+            game.add_from_file("data/glider_gun.txt", 15, 80, T_NONE);
+            game.add_from_file("data/glider_gun.txt", 25, 60, T_NONE);
+            game.add_from_file("data/glider_gun.txt", 35, 40, T_NONE);
+            game.add_from_file("data/glider_gun.txt", 45, 20, T_NONE);
+
+            game.add_from_file("data/glider_gun.txt", 5, 180, T_NONE_SYM);
+            game.add_from_file("data/glider_gun.txt", 15, 200, T_NONE_SYM);
+            game.add_from_file("data/glider_gun.txt", 25, 220, T_NONE_SYM);
+            game.add_from_file("data/glider_gun.txt", 35, 240, T_NONE_SYM);
+            game.add_from_file("data/glider_gun.txt", 45, 260, T_NONE_SYM);
             for _ in 0..5000 {
                 game.render(cfg);
                 game.next();
@@ -56,9 +66,9 @@ fn render(cfg: &mut Config) {
             }
         }
         Automaton::Langton => {
-            let mut anthill = Langton::new(1000, 1000);
-            for _ in 0..100 {
-                anthill.add_rand_ant();
+            let mut anthill = Langton::new(700, 700);
+            for _ in 0..50 {
+                anthill.add_rand_ant([349, 352], [349, 352]);
             }
             for _ in 0..1000 {
                 anthill.multi(100);
