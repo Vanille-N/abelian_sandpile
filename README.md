@@ -9,15 +9,28 @@ The purpose of this project is:
 
 ## Preview
 
-![Brian's brain](img/brain_capture.gif)
-
+![](img/brain_capture.gif)
 Brian's brain
+
+
+![](img/glider_guns.gif)
+Game of life
+
+
+![](img/sandpile.gif)
+Abelian sandpile
+
+
+![](img/ants.gif)
+Langton's ant
+
+
 
 ## How to build and run
 
 - make sure that `ffmpeg` is installed
 - edit main to choose automata and setup (it will eventually be possible to load a configuration file to avoid this step)
-- compile and run with cargo: `cargo run --release` (`--release` mode is recommended since the time lost optimizing is easily compensated during the execution, see NOTE #1)
+- compile and run with cargo: `cargo run --release` (`release` mode is recommended since the time lost optimizing is easily compensated during the execution, see NOTE #1)
 - open the resulting `.avi` video
 
 
@@ -32,7 +45,7 @@ Work is currently in progress on:
 
 TODO:
 - enable reading from text files to initialize grid (beta available for game of life)
-- create scanner to load a screenshot of a game of life state into an initializer
+- create scanner to load a screenshot of a game of life state into an initializer (beta available in `lifescan/`)
 
 
 It should be noted that this project relies heavily on `ffmpeg`. Luckily `ffmpeg` is available for all OS, but the commands may need tweaks to execute properly on non-Linux distributions.
@@ -64,7 +77,7 @@ Both builds were run with the following configuration:
 - 5000 generations
 
 The results speak for themselves:
-
-`dev`: 12m28s (incl. 45s running `ffmpeg`)
-
-`release`: 1m29s (incl. 45s running `ffmpeg`)
+```
+dev:       12m28s    (incl. 45s running ffmpeg)
+release:    1m29s    (incl. 45s running ffmpeg)
+```
