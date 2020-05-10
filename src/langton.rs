@@ -105,10 +105,10 @@ impl Langton {
         self.ants.push(Ant { pos, dir });
     }
 
-    pub fn add_rand_ant(&mut self) {
+    pub fn add_rand_ant(&mut self, [imin, imax]: [usize; 2], [jmin, jmax]: [usize; 2]) {
         let mut rng = rand::thread_rng();
         self.ants.push(Ant {
-            pos: [rng.gen_range(0, self.hgt), rng.gen_range(0, self.wth)],
+            pos: [rng.gen_range(imin, imax), rng.gen_range(jmin, jmax)],
             dir: Dir::from(rng.gen_range(0, 4)),
         });
     }
