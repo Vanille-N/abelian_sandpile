@@ -47,7 +47,6 @@ impl LifeLike {
         for i in 0..self.hgt {
             for j in 0..self.wth {
                 if rng.gen::<f64>() < p {
-                    self.cnt += 1;
                     self.field[[i, j]].birth();
                 }
             }
@@ -62,7 +61,6 @@ impl LifeLike {
         for i in lo(self.hgt)..hi(self.hgt) {
             for j in lo(self.wth)..hi(self.wth) {
                 if rng.gen::<f64>() < p {
-                    self.cnt += 1;
                     self.field[[i, j]].birth();
                 }
             }
@@ -95,11 +93,15 @@ impl LifeLike {
     }
 
     pub fn update(&mut self) {
+        self.born = 0;
+        self.dead = 0;
         for i in 0..self.hgt {
             for j in 0..self.wth {
-                self.field[[i, j]].update();
+                self.field[[i, j]].update(&mut self.born, &mut self.dead);
             }
         }
+        self.cnt += self.born;
+        self.cnt -= self.dead;
     }
 
     fn index_move(&self, i: usize, j: usize, mvi: isize, mvj: isize) -> [usize; 2] {
@@ -173,8 +175,6 @@ impl LifeLike {
     }
 
     pub fn next(&mut self) {
-        self.born = 0;
-        self.dead = 0;
         for i in 0..self.hgt {
             for j in 0..self.wth {
                 let neigh = self.count_neigh(i, j);
@@ -182,18 +182,14 @@ impl LifeLike {
                 if cell.is_alive() {
                     if !self.rules.s[neigh] {
                         cell.kill();
-                        self.dead += 1;
                     }
                 } else {
                     if self.rules.b[neigh] {
                         cell.birth();
-                        self.born += 1;
                     }
                 }
             }
         }
-        self.cnt += self.born;
-        self.cnt -= self.dead;
         self.update();
     }
 
@@ -224,14 +220,16 @@ impl Cell {
         self.succ = false;
     }
 
-    pub fn update(&mut self) {
+    pub fn update(&mut self, born: &mut usize, dead: &mut usize) {
         if self.succ {
             if !self.curr {
                 self.curr = true;
+                *born += 1;
             }
         } else {
             if self.curr {
                 self.curr = false;
+                *dead += 1;
             }
         }
     }
