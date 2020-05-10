@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 
+
 use std::fs;
 use std::process::Command;
 
@@ -40,7 +41,7 @@ fn render(cfg: &mut Config) {
         }
         Automaton::LifeLike(rules) => {
             let mut game = LifeLike::new(200, 300, &rules);
-            game.add_from_file("data/unknown.txt", 5, 150, Rotate::None);
+            game.add_from_file("data/bricklayer.txt", 5, 150, Rotate::None);
             for _ in 0..5000 {
                 game.render(cfg);
                 game.next();
