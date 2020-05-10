@@ -68,24 +68,24 @@ impl LifeLike {
         self.update();
     }
 
-    pub fn add_from_file(&mut self, file: &str, i0: isize, j0: isize, rot: Rotate) {
+    pub fn add_from_file(&mut self, file: &str, i0: isize, j0: isize, t: Transform) {
         let data = std::fs::read_to_string(file).unwrap();
         let mut i = i0;
         let mut j = j0;
         for c in data.chars() {
             match c {
                 '\n' => {
-                    rot.newline(&mut i, &mut j, i0, j0);
+                    t.newline(&mut i, &mut j, i0, j0);
                 }
                 'x' => {
                     self.field.mod_idx(i, j).birth();
-                    rot.next(&mut i, &mut j);
+                    t.next(&mut i, &mut j);
                 }
                 '.' => {
                     self.field.mod_idx(i, j).kill();
-                    rot.next(&mut i, &mut j);
+                    t.next(&mut i, &mut j);
                 }
-                ' ' => rot.next(&mut i, &mut j),
+                ' ' => t.next(&mut i, &mut j),
                 c => panic!("unknown character {}", c),
             }
         }
@@ -282,34 +282,79 @@ pub enum Rotate {
     Double,
 }
 
-impl Rotate {
+pub struct Transform {
+    rot: Rotate,
+    mirror: bool,
+}
+
+impl Transform {
     pub fn next(&self, i: &mut isize, j: &mut isize) {
-        match self {
-            Rotate::None => *j += 1,
-            Rotate::Left => *i -= 1,
-            Rotate::Right => *i += 1,
-            Rotate::Double => *j -= 1,
+        if self.mirror {
+            match self.rot {
+                Rotate::None => *j -= 1,
+                Rotate::Left => *i -= 1,
+                Rotate::Right => *i += 1,
+                Rotate::Double => *j += 1,
+            }
+        } else {
+            match self.rot {
+                Rotate::None => *j += 1,
+                Rotate::Left => *i -= 1,
+                Rotate::Right => *i += 1,
+                Rotate::Double => *j -= 1,
+            }
         }
     }
 
     pub fn newline(&self, i: &mut isize, j: &mut isize, i0: isize, j0: isize) {
-        match self {
-            Rotate::None => {
-                *i += 1;
-                *j = j0;
+        if self.mirror {
+            match self.rot {
+                Rotate::None => {
+                    *i += 1;
+                    *j = j0;
+                }
+                Rotate::Left => {
+                    *j -= 1;
+                    *i = i0;
+                }
+                Rotate::Right => {
+                    *j += 1;
+                    *i = i0;
+                }
+                Rotate::Double => {
+                    *i -= 1;
+                    *j = j0;
+                }
             }
-            Rotate::Left => {
-                *j += 1;
-                *i = i0;
-            }
-            Rotate::Right => {
-                *j -= 1;
-                *i = i0;
-            }
-            Rotate::Double => {
-                *i -= 1;
-                *j = j0;
+        } else {
+            match self.rot {
+                Rotate::None => {
+                    *i += 1;
+                    *j = j0;
+                }
+                Rotate::Left => {
+                    *j += 1;
+                    *i = i0;
+                }
+                Rotate::Right => {
+                    *j -= 1;
+                    *i = i0;
+                }
+                Rotate::Double => {
+                    *i -= 1;
+                    *j = j0;
+                }
             }
         }
     }
 }
+
+
+pub const T_NONE: Transform = Transform { rot: Rotate::None, mirror: false };
+pub const T_LT: Transform = Transform { rot: Rotate::Left, mirror: false };
+pub const T_RT: Transform = Transform { rot: Rotate::Right, mirror: false };
+pub const T_DB: Transform = Transform { rot: Rotate::Double, mirror: false };
+pub const T_NONE_SYM: Transform = Transform { rot: Rotate::None, mirror: true };
+pub const T_LT_SYM: Transform = Transform { rot: Rotate::Left, mirror: true };
+pub const T_RT_SYM: Transform = Transform { rot: Rotate::Right, mirror: true };
+pub const T_DB_SYM: Transform = Transform { rot: Rotate::Double, mirror: true };
