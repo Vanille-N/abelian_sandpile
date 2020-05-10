@@ -71,8 +71,7 @@ impl LifeLike {
     }
 
     pub fn add_from_file(&mut self, file: &str, i0: isize, j0: isize, rot: Rotate) {
-        let data = std::fs::read_to_string(file)
-            .unwrap();
+        let data = std::fs::read_to_string(file).unwrap();
         let mut i = i0;
         let mut j = j0;
         for c in data.chars() {

@@ -117,15 +117,15 @@ impl Config {
         let _ = Command::new("ffmpeg")
             .args(&[
                 "-pattern_type",
-                "glob",                 // find all frames according to glob pattern
+                "glob", // find all frames according to glob pattern
                 "-framerate",
-                "25",                   // 25 FPS
+                "25", // 25 FPS
                 "-i",
                 &format!("{}/*.ppm", self.dir()),
                 "-vf",
-                "scale=1000:-1",         // rescale to 1000px (keep aspect ratio)
+                "scale=1000:-1", // rescale to 1000px (keep aspect ratio)
                 "-sws_flags",
-                "neighbor",             // no interpolation
+                "neighbor", // no interpolation
                 "-vcodec",
                 "libx264",
                 "-crf",
