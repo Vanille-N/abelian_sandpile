@@ -120,7 +120,7 @@ impl<'a> Config<'a> {
             .arg(&self.dir())
             .status()
             .expect("Cleanup aborted");
-        fs::create_dir(self.dir()).expect(&format!("could not create directory {}", self.dir()));
+        fs::create_dir(self.dir()).unwrap_or_else(|_| panic!("could not create directory {}", self.dir()));
     }
 
     pub fn build(&self) {
@@ -172,7 +172,7 @@ impl Automaton<'_> {
             Automaton::Sandpile => String::from("sand"),
             Automaton::LifeLike(rules) => format!("life-{}", rules),
             Automaton::Brain => String::from("brain"),
-            Automaton::Turmite(_) => format!("turmite"),
+            Automaton::Turmite(_) => String::from("turmite"),
         }
     }
 }

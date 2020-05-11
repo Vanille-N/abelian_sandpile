@@ -183,10 +183,8 @@ impl LifeLike {
                     if !self.rules.s[neigh] {
                         cell.kill();
                     }
-                } else {
-                    if self.rules.b[neigh] {
-                        cell.birth();
-                    }
+                } else if self.rules.b[neigh] {
+                    cell.birth();
                 }
             }
         }
@@ -226,11 +224,9 @@ impl Cell {
                 self.curr = true;
                 *born += 1;
             }
-        } else {
-            if self.curr {
-                self.curr = false;
-                *dead += 1;
-            }
+        } else if self.curr {
+            self.curr = false;
+            *dead += 1;
         }
     }
 
@@ -251,7 +247,7 @@ impl Rules {
             b: [false; 9],
             s: [false; 9],
         };
-        let v: Vec<_> = s.split("-").collect();
+        let v: Vec<_> = s.split('-').collect();
         let (b, s) = (v[0], v[1]);
         for c in b.chars() {
             r.b[c.to_digit(10).unwrap() as usize] = true;
