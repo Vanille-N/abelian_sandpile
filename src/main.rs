@@ -6,18 +6,18 @@ use std::process::Command;
 
 mod brain;
 mod canvas;
-mod langton;
+mod turmite;
 mod lifelike;
 mod sandpile;
 
 use brain::*;
-use langton::*;
+use turmite::*;
 use lifelike::*;
 use sandpile::*;
 
 fn main() {
     let name = String::from("cluster");
-    let algo = Automaton::Langton;
+    let algo = Automaton::Turmite(RULES_4);
     let mut cfg = Config::new(algo, name, 25);
 
     cfg.prepare();
@@ -65,28 +65,28 @@ fn render(cfg: &mut Config) {
                 brain.next();
             }
         }
-        Automaton::Langton => {
-            let mut anthill = Langton::new(700, 700);
+        Automaton::Turmite(rules) => {
+            let mut anthill = Anthill::new(900, 900, rules);
             for _ in 0..50 {
-                anthill.add_rand_ant([349, 352], [349, 352]);
+                anthill.add_rand([449, 452], [449, 452], None);
             }
-            for _ in 0..1000 {
-                anthill.multi(100);
+            for _ in 0..2000 {
+                anthill.multi(50);
                 anthill.render(cfg);
             }
         }
     }
 }
 
-pub struct Config {
-    algo: Automaton,
+pub struct Config<'a> {
+    algo: Automaton<'a>,
     name: String,
     idx: usize,
     framerate: usize,
 }
 
-impl Config {
-    pub fn new(algo: Automaton, name: String, framerate: usize) -> Self {
+impl<'a> Config<'a> {
+    pub fn new(algo: Automaton<'a>, name: String, framerate: usize) -> Self {
         Self {
             algo,
             name,
@@ -159,20 +159,20 @@ impl Config {
     }
 }
 
-pub enum Automaton {
+pub enum Automaton<'a> {
     Sandpile,
     LifeLike(String),
     Brain,
-    Langton,
+    Turmite(Rules<'a>),
 }
 
-impl Automaton {
+impl Automaton<'_> {
     pub fn str(&self) -> String {
         match self {
             Automaton::Sandpile => String::from("sand"),
             Automaton::LifeLike(rules) => format!("life-{}", rules),
             Automaton::Brain => String::from("brain"),
-            Automaton::Langton => String::from("ant"),
+            Automaton::Turmite(_) => format!("turmite"),
         }
     }
 }
