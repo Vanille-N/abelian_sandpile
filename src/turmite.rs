@@ -4,7 +4,7 @@ use rand::Rng;
 type Mark = usize;
 
 #[derive(Clone, Copy, Eq, PartialEq)]
-enum Turn {
+pub enum Turn {
     Left,
     Right,
 }
@@ -17,18 +17,21 @@ pub enum Dir {
     E,
 }
 
+pub type Rules<'a> = &'a[&'a [(Mark, Turn)]];
+
 type Pos = [usize; 2];
 
 #[derive(Clone, Copy)]
 struct Ant {
     pos: Pos,
     dir: Dir,
+    rules: usize,
 }
 
-pub struct Langton {
+pub struct Anthill<'a> {
     hgt: usize,
     wth: usize,
-    map: Vec<(Mark, Turn)>,
+    map: Rules<'a>,
     field: Canvas<Mark>,
     ants: Vec<Ant>,
     cnt: usize,
@@ -83,39 +86,48 @@ impl Colorize for Mark {
     fn color(&self) -> Color {
         match self {
             0 => (0, 0, 0),
-            1 => (25, 25, 25),
-            _ => (10, 10, 10),
+            1 => (9, 18, 2),
+            2 => (17, 1, 25),
+            3 => (9, 19, 25),
+            4 => (25, 11, 0),
+            5 => (0, 25, 10),
+            6 => (25, 0, 0),
+            _ => (25, 25, 25),
         }
     }
 }
 
-impl Langton {
-    pub fn new(hgt: usize, wth: usize) -> Self {
+impl<'a> Anthill<'a> {
+    pub fn new(hgt: usize, wth: usize, rules: Rules<'a>) -> Self {
         Self {
             hgt,
             wth,
-            map: vec![(1, Turn::Left), (0, Turn::Right)],
+            map: rules,
             field: Canvas::new(hgt, wth, 0),
             ants: Vec::new(),
             cnt: 0,
         }
     }
 
-    pub fn add_ant(&mut self, pos: Pos, dir: Dir) {
-        self.ants.push(Ant { pos, dir });
+    pub fn add(&mut self, pos: Pos, dir: Dir, rules: usize) {
+        self.ants.push(Ant { pos, dir, rules });
     }
 
-    pub fn add_rand_ant(&mut self, [imin, imax]: [usize; 2], [jmin, jmax]: [usize; 2]) {
+    pub fn add_rand(&mut self, [imin, imax]: [usize; 2], [jmin, jmax]: [usize; 2], rules_rng: Option<usize>) {
         let mut rng = rand::thread_rng();
         self.ants.push(Ant {
             pos: [rng.gen_range(imin, imax), rng.gen_range(jmin, jmax)],
             dir: Dir::from(rng.gen_range(0, 4)),
+            rules: match rules_rng {
+                Some(n) => n,
+                None => rng.gen_range(0, self.map.len()),
+            }
         });
     }
 
     pub fn next(&mut self) {
         for ant in &mut self.ants {
-            let (m, t) = self.map[self.field[ant.pos]];
+            let (m, t) = self.map[ant.rules][self.field[ant.pos]];
             ant.turn(t);
             self.field[ant.pos] = m;
             ant.mv(self.hgt, self.wth);
@@ -133,7 +145,7 @@ impl Langton {
         let name = cfg.frame();
         self.field.render(&name);
 
-        eprintln!("Done frame {} ({}'th movement)", name, self.cnt);
+        eprint!("\rDone frame {} ({}'th movement)", name, self.cnt);
     }
 }
 
@@ -179,3 +191,14 @@ fn mv(p: Pos, d: Dir, imax: usize, jmax: usize) -> Pos {
         }
     }
 }
+
+
+pub const RULES_2: Rules = &[
+    &[(1, Turn::Left), (0, Turn::Right)],
+    &[(1, Turn::Right), (0, Turn::Left)],
+];
+
+pub const RULES_4: Rules = &[
+    &[(1, Turn::Left), (2, Turn::Right), (3, Turn::Right), (0, Turn::Left)],
+    &[(1, Turn::Right), (2, Turn::Left), (3, Turn::Left), (0, Turn::Right)],
+];
