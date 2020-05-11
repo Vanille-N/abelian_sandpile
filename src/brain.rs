@@ -204,7 +204,7 @@ impl Neuron {
         self.curr = self.succ;
     }
 
-    pub fn is_firing(&self) -> bool {
+    pub fn is_firing(self) -> bool {
         self.curr == State::Firing
     }
 }

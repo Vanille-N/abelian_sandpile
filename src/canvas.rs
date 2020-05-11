@@ -22,7 +22,7 @@ impl<T: Colorize> Canvas<T> {
         }
     }
 
-    pub fn render(&self, name: &String) {
+    pub fn render(&self, name: &str) {
         let mut f = BufWriter::new(File::create(name).unwrap());
         write!(f, "P3\n{} {}\n25\n", self.wth, self.hgt).unwrap();
         for line in &self.tab {

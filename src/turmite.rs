@@ -38,7 +38,7 @@ pub struct Anthill<'a> {
 }
 
 impl Dir {
-    fn turn(&self, t: Turn) -> Dir {
+    fn turn(self, t: Turn) -> Dir {
         match self {
             Dir::N => {
                 if t == Turn::Left {

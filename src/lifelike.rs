@@ -230,7 +230,7 @@ impl Cell {
         }
     }
 
-    pub fn is_alive(&self) -> bool {
+    pub fn is_alive(self) -> bool {
         self.curr
     }
 }
