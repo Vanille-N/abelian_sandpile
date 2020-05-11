@@ -1,19 +1,18 @@
 #![allow(dead_code)]
 
-
 use std::fs;
 use std::process::Command;
 
 mod brain;
 mod canvas;
-mod turmite;
 mod lifelike;
 mod sandpile;
+mod turmite;
 
 use brain::*;
-use turmite::*;
 use lifelike::*;
 use sandpile::*;
+use turmite::*;
 
 fn main() {
     let name = String::from("cluster");
@@ -120,7 +119,8 @@ impl<'a> Config<'a> {
             .arg(&self.dir())
             .status()
             .expect("Cleanup aborted");
-        fs::create_dir(self.dir()).unwrap_or_else(|_| panic!("could not create directory {}", self.dir()));
+        fs::create_dir(self.dir())
+            .unwrap_or_else(|_| panic!("could not create directory {}", self.dir()));
     }
 
     pub fn build(&self) {

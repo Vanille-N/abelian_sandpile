@@ -345,12 +345,35 @@ impl Transform {
     }
 }
 
-
-pub const T_NONE: Transform = Transform { rot: Rotate::None, mirror: false };
-pub const T_LT: Transform = Transform { rot: Rotate::Left, mirror: false };
-pub const T_RT: Transform = Transform { rot: Rotate::Right, mirror: false };
-pub const T_DB: Transform = Transform { rot: Rotate::Double, mirror: false };
-pub const T_NONE_SYM: Transform = Transform { rot: Rotate::None, mirror: true };
-pub const T_LT_SYM: Transform = Transform { rot: Rotate::Left, mirror: true };
-pub const T_RT_SYM: Transform = Transform { rot: Rotate::Right, mirror: true };
-pub const T_DB_SYM: Transform = Transform { rot: Rotate::Double, mirror: true };
+pub const T_NONE: Transform = Transform {
+    rot: Rotate::None,
+    mirror: false,
+};
+pub const T_LT: Transform = Transform {
+    rot: Rotate::Left,
+    mirror: false,
+};
+pub const T_RT: Transform = Transform {
+    rot: Rotate::Right,
+    mirror: false,
+};
+pub const T_DB: Transform = Transform {
+    rot: Rotate::Double,
+    mirror: false,
+};
+pub const T_NONE_SYM: Transform = Transform {
+    rot: Rotate::None,
+    mirror: true,
+};
+pub const T_LT_SYM: Transform = Transform {
+    rot: Rotate::Left,
+    mirror: true,
+};
+pub const T_RT_SYM: Transform = Transform {
+    rot: Rotate::Right,
+    mirror: true,
+};
+pub const T_DB_SYM: Transform = Transform {
+    rot: Rotate::Double,
+    mirror: true,
+};

@@ -17,7 +17,7 @@ pub enum Dir {
     E,
 }
 
-pub type Rules<'a> = &'a[&'a [(Mark, Turn)]];
+pub type Rules<'a> = &'a [&'a [(Mark, Turn)]];
 
 type Pos = [usize; 2];
 
@@ -113,7 +113,12 @@ impl<'a> Anthill<'a> {
         self.ants.push(Ant { pos, dir, rules });
     }
 
-    pub fn add_rand(&mut self, [imin, imax]: [usize; 2], [jmin, jmax]: [usize; 2], rules_rng: Option<usize>) {
+    pub fn add_rand(
+        &mut self,
+        [imin, imax]: [usize; 2],
+        [jmin, jmax]: [usize; 2],
+        rules_rng: Option<usize>,
+    ) {
         let mut rng = rand::thread_rng();
         self.ants.push(Ant {
             pos: [rng.gen_range(imin, imax), rng.gen_range(jmin, jmax)],
@@ -121,7 +126,7 @@ impl<'a> Anthill<'a> {
             rules: match rules_rng {
                 Some(n) => n,
                 None => rng.gen_range(0, self.map.len()),
-            }
+            },
         });
     }
 
@@ -192,13 +197,22 @@ fn mv(p: Pos, d: Dir, imax: usize, jmax: usize) -> Pos {
     }
 }
 
-
 pub const RULES_2: Rules = &[
     &[(1, Turn::Left), (0, Turn::Right)],
     &[(1, Turn::Right), (0, Turn::Left)],
 ];
 
 pub const RULES_4: Rules = &[
-    &[(1, Turn::Left), (2, Turn::Right), (3, Turn::Right), (0, Turn::Left)],
-    &[(1, Turn::Right), (2, Turn::Left), (3, Turn::Left), (0, Turn::Right)],
+    &[
+        (1, Turn::Left),
+        (2, Turn::Right),
+        (3, Turn::Right),
+        (0, Turn::Left),
+    ],
+    &[
+        (1, Turn::Right),
+        (2, Turn::Left),
+        (3, Turn::Left),
+        (0, Turn::Right),
+    ],
 ];
