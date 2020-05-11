@@ -197,8 +197,8 @@ impl LifeLike {
         let name = cfg.frame();
         self.field.render(&name);
 
-        eprintln!(
-            "Done generation {} : {} alive (+{} ; -{})",
+        eprint!(
+            "\rDone generation {} : {} alive (+{} ; -{})",
             name, self.cnt, self.born, self.dead
         );
     }

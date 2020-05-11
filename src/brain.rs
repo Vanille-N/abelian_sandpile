@@ -176,7 +176,7 @@ impl Brain {
         let name = cfg.frame();
         self.field.render(&name);
 
-        eprintln!("Done generation {} : {} fired", name, self.fired);
+        eprint!("\rDone generation {} : {} fired", name, self.fired);
     }
 }
 

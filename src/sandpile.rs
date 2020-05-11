@@ -157,7 +157,7 @@ impl Sandpile {
         let name = cfg.frame();
         self.field.render(&name);
 
-        eprintln!("Done rendering frame {} : workload {}", name, self.cnt);
+        eprint!("\rDone rendering frame {} : workload {}", name, self.cnt);
         self.cnt = 0;
     }
 
