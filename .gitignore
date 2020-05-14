@@ -3,3 +3,4 @@ exec
 *.ppm
 *.avi
 data/patterns
+deps.png

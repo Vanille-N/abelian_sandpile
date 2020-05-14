@@ -1,6 +1,8 @@
 use rand::Rng;
 extern crate rand;
 
+use std::ascii;
+
 use crate::canvas::*;
 
 #[derive(Clone, Copy)]
@@ -72,10 +74,25 @@ impl LifeLike {
         let data = std::fs::read_to_string(file).unwrap();
         let mut i = i0;
         let mut j = j0;
-        for c in data.chars() {
-            match c {
-                '\n' => {
-                    t.newline(&mut i, &mut j, i0, j0);
+        match file.split('.').rev().next().unwrap() { // get file extension
+            "txt" => {
+                for c in data.chars() {
+                    match c {
+                        '\n' => {
+                            t.newline(&mut i, &mut j, i0, j0);
+                        }
+                        'x' => {
+                            self.field.mod_idx(i, j).birth();
+                            t.next(&mut i, &mut j);
+                        }
+                        '.' => {
+                            self.field.mod_idx(i, j).kill();
+                            t.next(&mut i, &mut j);
+                        }
+                        ' ' => t.next(&mut i, &mut j),
+                        '\r' => (),
+                        c => panic!("unknown character {}", ascii::escape_default(c as u8)),
+                    }
                 }
                 'x' => {
                     self.field.mod_idx(i, j).birth();
