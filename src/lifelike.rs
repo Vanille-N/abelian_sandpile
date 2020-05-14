@@ -122,13 +122,39 @@ impl LifeLike {
                         Some(c) => panic!("unknown character {}", ascii::escape_default(c as u8)),
                     }
                 }
-                '.' => {
-                    self.field.mod_idx(i, j).kill();
-                    t.next(&mut i, &mut j);
-                }
-                ' ' => t.next(&mut i, &mut j),
-                c => panic!("unknown character {}", c),
             }
+            "cells" => {
+                let mut it = data.chars() ;
+                loop {
+                    match it.next() {
+                        None => break,
+                        Some('!') => loop {
+                            match it.next() {
+                                None => break,
+                                Some('\n') => break,
+                                Some(_) => (),
+                            }
+                        }
+                        Some('\n') => {
+                            t.newline(&mut i, &mut j, i0, j0);
+                        }
+                        Some('O') => {
+                            self.field.mod_idx(i, j).birth();
+                            t.next(&mut i, &mut j);
+                        }
+                        Some('.') => {
+                            self.field.mod_idx(i, j).kill();
+                            t.next(&mut i, &mut j);
+                        }
+                        Some('\r') => (),
+                        Some(c) => panic!("unknown character `{}` ({})", ascii::escape_default(c as u8), c as u32),
+                    }
+                }
+            }
+            "rle" => {
+                unimplemented!()
+            }
+            ext => panic!("{} is not recognized as a valid extension", ext),
         }
         self.update();
     }
