@@ -94,9 +94,33 @@ impl LifeLike {
                         c => panic!("unknown character {}", ascii::escape_default(c as u8)),
                     }
                 }
-                'x' => {
-                    self.field.mod_idx(i, j).birth();
-                    t.next(&mut i, &mut j);
+            }
+            "lif" => {
+                let mut it = data.chars() ;
+                loop {
+                    match it.next() {
+                        None => break,
+                        Some('#') => loop {
+                            match it.next() {
+                                None => break,
+                                Some('\n') => break,
+                                Some(_) => (),
+                            }
+                        }
+                        Some('\n') => {
+                            t.newline(&mut i, &mut j, i0, j0);
+                        }
+                        Some('*') => {
+                            self.field.mod_idx(i, j).birth();
+                            t.next(&mut i, &mut j);
+                        }
+                        Some('.') => {
+                            self.field.mod_idx(i, j).kill();
+                            t.next(&mut i, &mut j);
+                        }
+                        Some('\r') => (),
+                        Some(c) => panic!("unknown character {}", ascii::escape_default(c as u8)),
+                    }
                 }
                 '.' => {
                     self.field.mod_idx(i, j).kill();
