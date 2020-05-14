@@ -15,8 +15,8 @@ use sandpile::*;
 use turmite::*;
 
 fn main() {
-    let name = String::from("cluster");
-    let algo = Automaton::Turmite(RULES_4);
+    let name = String::from("breeder");
+    let algo = Automaton::LifeLike(LIFE);
     let mut cfg = Config::new(algo, name, 25);
 
     cfg.prepare();
@@ -39,19 +39,9 @@ fn render(cfg: &mut Config) {
             }
         }
         Automaton::LifeLike(rules) => {
-            let mut game = LifeLike::new(200, 300, &rules);
-            game.add_from_file("data/glider_gun.txt", 5, 100, T_NONE);
-            game.add_from_file("data/glider_gun.txt", 15, 80, T_NONE);
-            game.add_from_file("data/glider_gun.txt", 25, 60, T_NONE);
-            game.add_from_file("data/glider_gun.txt", 35, 40, T_NONE);
-            game.add_from_file("data/glider_gun.txt", 45, 20, T_NONE);
-
-            game.add_from_file("data/glider_gun.txt", 5, 180, T_NONE_SYM);
-            game.add_from_file("data/glider_gun.txt", 15, 200, T_NONE_SYM);
-            game.add_from_file("data/glider_gun.txt", 25, 220, T_NONE_SYM);
-            game.add_from_file("data/glider_gun.txt", 35, 240, T_NONE_SYM);
-            game.add_from_file("data/glider_gun.txt", 45, 260, T_NONE_SYM);
-            for _ in 0..5000 {
+            let mut game = LifeLike::new(800, 2000, &rules);
+            game.add_from_file("data/patterns/breeder1.cells", 400, 0, T_NONE) ;
+            for _ in 0..2000 {
                 game.render(cfg);
                 game.next();
             }
