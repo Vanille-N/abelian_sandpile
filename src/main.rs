@@ -161,7 +161,7 @@ impl<'a> Config<'a> {
 
 pub enum Automaton<'a> {
     Sandpile,
-    LifeLike(String),
+    LifeLike(&'a str),
     Brain,
     Turmite(Rules<'a>),
 }
