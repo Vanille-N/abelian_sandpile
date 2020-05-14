@@ -33,6 +33,9 @@ Langton's ant
 - compile and run with cargo: `cargo run --release` (`release` mode is recommended since the time lost optimizing is easily compensated during the execution, see NOTE #1)
 - open the resulting `.avi` video
 
+The front page of [LifeWiki](https://www.conwaylife.com/wiki) contains a collection of patterns. It is recommended to download the archive and extract it into `data/*` or `data/patterns/*`.
+This will give you access to 15.6MB of patterns, of which 1446 *.cells are readable by this project and 2381 *.rle soon will be.
+
 
 ## Work in progress and future improvements
 
@@ -63,7 +66,7 @@ $ cargo build --release
     Finished release [optimized] target(s) in 1.94s
 ```
 
-for both of these, the dependencies were compiled first, then all files of the project were forcefully recompiled. The difference between `dev` and `release` modes is noticeable, even more so when only main is recompiled: 0.79s vs 1.98s.
+For both of these, the dependencies were compiled first, then all files of the project were forcefully recompiled. The difference between `dev` and `release` modes is noticeable, even more so when only main is recompiled: 0.79s vs 1.98s.
 More tests yielded comparable results: between 0.58s and 0.81s for `dev`, against
 
 Thus compiling in `dev` rather that `release` can spare us a bit over a second.
@@ -81,3 +84,4 @@ The results speak for themselves:
 dev:       12m28s    (incl. 45s running ffmpeg)
 release:    1m29s    (incl. 45s running ffmpeg)
 ```
+Thus this project should always be run with `cargo run --release`.
