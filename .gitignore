@@ -4,3 +4,4 @@ exec
 *.avi
 data/patterns
 deps.png
+Cargo.lock

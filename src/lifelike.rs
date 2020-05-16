@@ -1,6 +1,4 @@
 use rand::Rng;
-extern crate rand;
-
 use std::ascii;
 
 use crate::canvas::*;
