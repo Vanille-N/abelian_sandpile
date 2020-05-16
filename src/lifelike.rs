@@ -152,7 +152,52 @@ impl LifeLike {
                 }
             }
             "rle" => {
-                unimplemented!()
+                let mut it = data.chars();
+                let mut cnt = 0;
+                loop {
+                    match it.next() {
+                        None => break,
+                        Some('#') | Some('x') => loop {
+                            // '#' is a comment,
+                            // 'x' marks the start of an 'x = {}, y = {}' that this implementation chooses to ignore
+                            match it.next() {
+                                None => break,
+                                Some('\n') => break,
+                                Some(_) => ()
+                            }
+                        }
+                        Some('$') => {
+                            if cnt == 0 { cnt = 1; }
+                            for _ in 0..cnt {
+                                t.newline(&mut i, &mut j, i0, j0);
+                            }
+                            cnt = 0;
+                        }
+                        Some('o') => {
+                            if cnt == 0 { cnt = 1; }
+                            for _ in 0..cnt {
+                                self.field.mod_idx(i, j).birth();
+                                t.next(&mut i, &mut j);
+                            }
+                            cnt = 0;
+                        }
+                        Some('b') => {
+                            if cnt == 0 { cnt = 1; }
+                            for _ in 0..cnt {
+                                self.field.mod_idx(i, j).kill();
+                                t.next(&mut i, &mut j);
+                            }
+                            cnt = 0;
+                        }
+                        Some(d @ '0'..='9') => {
+                            cnt = cnt * 10 + d.to_digit(10).unwrap();
+                        }
+                        Some('!') => break,
+                        Some('\r') => (),
+                        Some('\n') => (),
+                        Some(c) => panic!("unknown character `{}` ({})", ascii::escape_default(c as u8), c as u32),
+                    }
+                }
             }
             ext => panic!("{} is not recognized as a valid extension", ext),
         }
