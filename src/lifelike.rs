@@ -74,7 +74,8 @@ impl LifeLike {
         let data = std::fs::read_to_string(file).unwrap();
         let mut i = i0;
         let mut j = j0;
-        match file.split('.').rev().next().unwrap() { // get file extension
+        match file.split('.').rev().next().unwrap() {
+            // get file extension
             "txt" => {
                 for c in data.chars() {
                     match c {
@@ -96,7 +97,7 @@ impl LifeLike {
                 }
             }
             "lif" => {
-                let mut it = data.chars() ;
+                let mut it = data.chars();
                 loop {
                     match it.next() {
                         None => break,
@@ -106,7 +107,7 @@ impl LifeLike {
                                 Some('\n') => break,
                                 Some(_) => (),
                             }
-                        }
+                        },
                         Some('\n') => {
                             t.newline(&mut i, &mut j, i0, j0);
                         }
@@ -124,7 +125,7 @@ impl LifeLike {
                 }
             }
             "cells" => {
-                let mut it = data.chars() ;
+                let mut it = data.chars();
                 loop {
                     match it.next() {
                         None => break,
@@ -134,7 +135,7 @@ impl LifeLike {
                                 Some('\n') => break,
                                 Some(_) => (),
                             }
-                        }
+                        },
                         Some('\n') => {
                             t.newline(&mut i, &mut j, i0, j0);
                         }
@@ -147,7 +148,11 @@ impl LifeLike {
                             t.next(&mut i, &mut j);
                         }
                         Some('\r') => (),
-                        Some(c) => panic!("unknown character `{}` ({})", ascii::escape_default(c as u8), c as u32),
+                        Some(c) => panic!(
+                            "unknown character `{}` ({})",
+                            ascii::escape_default(c as u8),
+                            c as u32
+                        ),
                     }
                 }
             }
@@ -163,18 +168,22 @@ impl LifeLike {
                             match it.next() {
                                 None => break,
                                 Some('\n') => break,
-                                Some(_) => ()
+                                Some(_) => (),
                             }
-                        }
+                        },
                         Some('$') => {
-                            if cnt == 0 { cnt = 1; }
+                            if cnt == 0 {
+                                cnt = 1;
+                            }
                             for _ in 0..cnt {
                                 t.newline(&mut i, &mut j, i0, j0);
                             }
                             cnt = 0;
                         }
                         Some('o') => {
-                            if cnt == 0 { cnt = 1; }
+                            if cnt == 0 {
+                                cnt = 1;
+                            }
                             for _ in 0..cnt {
                                 self.field.mod_idx(i, j).birth();
                                 t.next(&mut i, &mut j);
@@ -182,7 +191,9 @@ impl LifeLike {
                             cnt = 0;
                         }
                         Some('b') => {
-                            if cnt == 0 { cnt = 1; }
+                            if cnt == 0 {
+                                cnt = 1;
+                            }
                             for _ in 0..cnt {
                                 self.field.mod_idx(i, j).kill();
                                 t.next(&mut i, &mut j);
@@ -195,7 +206,11 @@ impl LifeLike {
                         Some('!') => break,
                         Some('\r') => (),
                         Some('\n') => (),
-                        Some(c) => panic!("unknown character `{}` ({})", ascii::escape_default(c as u8), c as u32),
+                        Some(c) => panic!(
+                            "unknown character `{}` ({})",
+                            ascii::escape_default(c as u8),
+                            c as u32
+                        ),
                     }
                 }
             }
