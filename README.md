@@ -34,7 +34,7 @@ Langton's ant
 - open the resulting `.avi` video
 
 The front page of [LifeWiki](https://www.conwaylife.com/wiki) contains a collection of patterns. It is recommended to download the archive and extract it into `data/*` or `data/patterns/*`.
-This will give you access to 15.6MB of patterns, of which 1446 *.cells are readable by this project and 2381 *.rle soon will be.
+This will give you access to 15.6MB of patterns, from which 1446 `*.cells` and 2381 `*.rle` can be read by this project.
 
 
 ## Work in progress and future improvements
@@ -57,26 +57,26 @@ It should be noted that this project relies heavily on `ffmpeg`. Luckily `ffmpeg
 ## NOTE #1: About runtime vs compile-time
 
 We first compare build times:
+
 ```
+$ cargo clean -p cellular_automata
 $ cargo build
-   Compiling cellular_automata v0.1.0
-    Finished dev [unoptimized + debuginfo] target(s) in 1.27s
+min/max/avg5 of 7 : 0.54/0.62/0.56
+```
+```
+$ cargo clean --release -p cellular_automata
 $ cargo build --release
-   Compiling cellular_automata v0.1.0
-    Finished release [optimized] target(s) in 1.94s
+min/max/avg5 of 7 : 1.93/2.00/1.97
 ```
 
-For both of these, the dependencies were compiled first, then all files of the project were forcefully recompiled. The difference between `dev` and `release` modes is noticeable, even more so when only main is recompiled: 0.79s vs 1.98s.
-More tests yielded comparable results: between 0.58s and 0.81s for `dev`, against
-
-Thus compiling in `dev` rather that `release` can spare us a bit over a second.
+Compiling in `dev` rather that `release` can spare us a bit over a second.
 
 But what of runtime ?
 
 Both builds were run with the following configuration:
 - Lifelike(23/3) rules
 - a 200x300 field
-- a single bricklayer loaded at the top right corner
+- a single bricklayer loaded at the top right corner (`data/patterns/bricklayer.rle`)
 - 5000 generations
 
 The results speak for themselves:
