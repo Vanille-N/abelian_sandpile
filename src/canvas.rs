@@ -1,7 +1,8 @@
 use std::fs::File;
 use std::io::{BufWriter, Write};
 
-/// 8-bit RGB
+/// RGB color
+/// Each component should be in the range [0, 25]
 pub type Color = (u8, u8, u8);
 
 /// Indicates that a object of a given type can be converted to a color.
