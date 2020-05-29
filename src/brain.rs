@@ -66,7 +66,7 @@ impl Brain {
             for j in 0..self.wth {
                 if rng.gen::<f64>() < p {
                     self.fired += 1;
-                    self.field[[i, j]].fire();
+                    self.field[[i, j]].next();
                 }
             }
         }
@@ -85,7 +85,7 @@ impl Brain {
             for j in lo(self.wth)..hi(self.wth) {
                 if rng.gen::<f64>() < p {
                     self.fired += 1;
-                    self.field[[i, j]].fire();
+                    self.field[[i, j]].next();
                 }
             }
         }
@@ -186,14 +186,14 @@ impl Brain {
             for j in 0..self.wth {
                 match self.field[[i, j]].curr {
                     State::Firing => {
-                        self.field[[i, j]].refactor();
+                        self.field[[i, j]].next();
                     }
                     State::Dying => {
-                        self.field[[i, j]].kill();
+                        self.field[[i, j]].next();
                     }
                     State::Ready => {
                         if self.count_neigh(i, j) == 2 {
-                            self.field[[i, j]].fire();
+                            self.field[[i, j]].next();
                             self.fired += 1;
                         }
                     }
