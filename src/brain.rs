@@ -39,6 +39,7 @@ impl Colorize for Neuron {
     }
 }
 
+/// A collection of Neurons
 pub struct Brain {
     field: Canvas<Neuron>,
     hgt: usize,
@@ -46,7 +47,6 @@ pub struct Brain {
     fired: usize,
 }
 
-/// A collection of Neurons
 impl Brain {
     /// A new Brain is constructed from only its dimensions
     pub fn new(hgt: usize, wth: usize) -> Self {
@@ -58,7 +58,7 @@ impl Brain {
         }
     }
 
-    /// Randomly fire some cells (all over the canvas)
+    /// Randomly fire some cells (all over the canvas).
     /// p is the probability for any cell of being fired
     pub fn init_rand(&mut self, p: f64) {
         let mut rng = rand::thread_rng();
@@ -73,7 +73,7 @@ impl Brain {
         self.update();
     }
 
-    /// Randomly fire some cells (only in a small area near the center)
+    /// Randomly fire some cells (only in a small area near the center).
     /// f is the fraction (both vertically and horizontally) of the canvas
     /// on which to fire neurons.
     /// p is the probability of any neuron of being fired
@@ -101,7 +101,8 @@ impl Brain {
         }
     }
 
-    /// 2D Array access with automatic looping around the edges
+    /// 2D Array access with automatic looping around the edges.
+    /// Only works for direct neighbors (Moore neighborhood)
     fn index_move(&self, i: usize, j: usize, mvi: isize, mvj: isize) -> [usize; 2] {
         let (mut i, mut j) = (i, j);
         match mvi {
@@ -174,9 +175,11 @@ impl Brain {
     }
 
     /// Rules of Brian's Brain for how a neuron changes state
-    /// Firing -> Dying
-    /// Dying -> Ready
-    /// Ready -> Firing iff 2 firing neighbors
+    /// ```
+    /// State::Firing -> State::Dying
+    /// State::Dying -> State::Ready
+    /// State::Ready -> State::Firing iff 2 firing neighbors
+    /// ```
     pub fn next(&mut self) {
         self.fired = 0;
         for i in 0..self.hgt {
