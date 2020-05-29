@@ -36,6 +36,8 @@ Langton's ant
 The front page of [LifeWiki](https://www.conwaylife.com/wiki) contains a collection of patterns. It is recommended to download the archive and extract it into `data/*` or `data/patterns/*`.
 This will give you access to 15.6MB of patterns, from which 1446 `*.cells` and 2381 `*.rle` can be read by this project.
 
+Documentation is available for this project with `$ cargo doc --open`.
+
 
 ## Work in progress and future improvements
 
