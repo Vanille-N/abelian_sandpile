@@ -1,14 +1,17 @@
 use crate::canvas::*;
 use rand::Rng;
 
+/// Trace left by the turmites
 type Mark = usize;
 
+/// Change orientation
 #[derive(Clone, Copy, Eq, PartialEq)]
 pub enum Turn {
     Left,
     Right,
 }
 
+/// Orientation of a turmite
 #[derive(Clone, Copy)]
 pub enum Dir {
     N,
@@ -17,10 +20,13 @@ pub enum Dir {
     E,
 }
 
+/// Transition table for how to move the turmite
 pub type Rules<'a> = &'a [&'a [(Mark, Turn)]];
 
+/// Position on the canvas of a turmite
 type Pos = [usize; 2];
 
+/// A single turmite
 #[derive(Clone, Copy)]
 struct Ant {
     pos: Pos,
@@ -28,6 +34,7 @@ struct Ant {
     rules: usize,
 }
 
+/// A collection of turmites, along with their environment
 pub struct Anthill<'a> {
     hgt: usize,
     wth: usize,
@@ -38,6 +45,7 @@ pub struct Anthill<'a> {
 }
 
 impl Dir {
+    /// Update new direction
     fn turn(self, t: Turn) -> Dir {
         match self {
             Dir::N => {
@@ -71,6 +79,7 @@ impl Dir {
         }
     }
 
+    /// Map integers to directions to enable random generation
     fn from(i: usize) -> Self {
         match i {
             0 => Dir::N,
@@ -98,6 +107,7 @@ impl Colorize for Mark {
 }
 
 impl<'a> Anthill<'a> {
+    /// Create anthill with no ants and a blank environment
     pub fn new(hgt: usize, wth: usize, rules: Rules<'a>) -> Self {
         Self {
             hgt,
@@ -109,10 +119,13 @@ impl<'a> Anthill<'a> {
         }
     }
 
+    /// Add an ant
     pub fn add(&mut self, pos: Pos, dir: Dir, rules: usize) {
         self.ants.push(Ant { pos, dir, rules });
     }
 
+    /// Add a randomly generated ant with restrictions on the range
+    /// of positions and the possible orientations.
     pub fn add_rand(
         &mut self,
         [imin, imax]: [usize; 2],
@@ -130,6 +143,7 @@ impl<'a> Anthill<'a> {
         });
     }
 
+    /// Make all ants by one step
     pub fn next(&mut self) {
         for ant in &mut self.ants {
             let (m, t) = self.map[ant.rules][self.field[ant.pos]];
@@ -140,12 +154,14 @@ impl<'a> Anthill<'a> {
         self.cnt += 1;
     }
 
+    /// Make all ants advance by many steps (each at their own turn)
     pub fn multi(&mut self, n: usize) {
         for _ in 0..n {
             self.next();
         }
     }
 
+    /// Create image from current state
     pub fn render(&mut self, cfg: &mut crate::Config) {
         let name = cfg.frame();
         self.field.render(&name);
@@ -155,15 +171,18 @@ impl<'a> Anthill<'a> {
 }
 
 impl Ant {
+    /// Change direction
     pub fn turn(&mut self, t: Turn) {
         self.dir = self.dir.turn(t);
     }
 
+    /// Step forward by one (with wrapping around edges)
     pub fn mv(&mut self, imax: usize, jmax: usize) {
         self.pos = mv(self.pos, self.dir, imax, jmax);
     }
 }
 
+/// Calculate next position depending on direction (with wrapping)
 fn mv(p: Pos, d: Dir, imax: usize, jmax: usize) -> Pos {
     match d {
         Dir::N => {
