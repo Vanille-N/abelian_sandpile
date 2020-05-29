@@ -5,9 +5,9 @@ use std::collections::VecDeque;
 #[derive(Clone, Copy)]
 struct Grain {
     hgt: usize,
-    scheduled: bool,
     /// scheduled indicates whether or not the pile is already planned for
     /// toppling in order to improve performance
+    scheduled: bool,
 }
 
 impl Grain {

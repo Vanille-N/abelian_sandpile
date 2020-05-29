@@ -387,9 +387,9 @@ impl Cell {
 /// next iteration.
 #[derive(Clone, Copy)]
 struct Rules {
+    /// B: Born; S: Survive
     b: [bool; 9],
     s: [bool; 9],
-    /// B: Born; S: Survive
 }
 
 impl Rules {
