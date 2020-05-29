@@ -382,13 +382,26 @@ impl Cell {
     }
 }
 
+/// Rules indicate for both possible states and for each possible
+/// number of live neighbors whether or not the cell should be alive for the
+/// next iteration.
 #[derive(Clone, Copy)]
 struct Rules {
     b: [bool; 9],
     s: [bool; 9],
+    /// B: Born; S: Survive
 }
 
 impl Rules {
+    /// Rules are initialized from a str that should be of the form
+    /// `^([0-9])*-([0-9])*$`, where `$1` (resp. `$2`) is a list of
+    /// (not necessarily ordered nor unique) all neighbor counts
+    /// for which the cell should be born (resp. survive) at the next
+    /// turn.
+    ///
+    /// See [Wikipedia](https://en.wikipedia.org/wiki/Life-like_cellular_automaton)
+    /// for a complete explanation
+    /// (although with a different notation: `^B([0-9]*)/S([0-9]*)$ -> $1-$2`)
     pub fn new(s: &str) -> Self {
         let mut r = Rules {
             b: [false; 9],
@@ -418,6 +431,7 @@ pub const DAYNIGHT: &str = "3678-34678";
 pub const MORLEY: &str = "368-245";
 pub const ANNEAL: &str = "4678-35678";
 
+/// Possible rotations of a pattern
 pub enum Rotate {
     None,
     Left,
@@ -425,12 +439,15 @@ pub enum Rotate {
     Double,
 }
 
+/// All transformations of a pattern are a combination of a rotation and
+/// a symmetry
 pub struct Transform {
     rot: Rotate,
     mirror: bool,
 }
 
 impl Transform {
+    /// Calculate index of next cell when staying on the same line
     pub fn next(&self, i: &mut isize, j: &mut isize) {
         if self.mirror {
             match self.rot {
@@ -449,6 +466,7 @@ impl Transform {
         }
     }
 
+    /// Calculate index of next cell when a newline is added
     pub fn newline(&self, i: &mut isize, j: &mut isize, i0: isize, j0: isize) {
         if self.mirror {
             match self.rot {
