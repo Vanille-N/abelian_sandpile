@@ -55,13 +55,13 @@ fn render(cfg: &mut Config) {
             }
         }
         Automaton::Turmite(rules) => {
-            let mut anthill = Anthill::new(900, 900, rules);
+            let mut mound = Mound::new(900, 900, rules);
             for _ in 0..50 {
-                anthill.add_rand([449, 452], [449, 452], None);
+                mound.add_rand([449, 452], [449, 452], None);
             }
             for _ in 0..2000 {
-                anthill.multi(50);
-                anthill.render(cfg);
+                mound.multi(50);
+                mound.render(cfg);
             }
         }
     }

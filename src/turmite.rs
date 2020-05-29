@@ -28,19 +28,19 @@ type Pos = [usize; 2];
 
 /// A single turmite
 #[derive(Clone, Copy)]
-struct Ant {
+struct Turmite {
     pos: Pos,
     dir: Dir,
     rules: usize,
 }
 
 /// A collection of turmites, along with their environment
-pub struct Anthill<'a> {
+pub struct Mound<'a> {
     hgt: usize,
     wth: usize,
     map: Rules<'a>,
     field: Canvas<Mark>,
-    ants: Vec<Ant>,
+    turmites: Vec<Turmite>,
     cnt: usize,
 }
 
@@ -106,25 +106,25 @@ impl Colorize for Mark {
     }
 }
 
-impl<'a> Anthill<'a> {
-    /// Create anthill with no ants and a blank environment
+impl<'a> Mound<'a> {
+    /// Create mound with no turmites and a blank environment
     pub fn new(hgt: usize, wth: usize, rules: Rules<'a>) -> Self {
         Self {
             hgt,
             wth,
             map: rules,
             field: Canvas::new(hgt, wth, 0),
-            ants: Vec::new(),
+            turmites: Vec::new(),
             cnt: 0,
         }
     }
 
-    /// Add an ant
+    /// Add a turmite
     pub fn add(&mut self, pos: Pos, dir: Dir, rules: usize) {
-        self.ants.push(Ant { pos, dir, rules });
+        self.turmites.push(Turmite { pos, dir, rules });
     }
 
-    /// Add a randomly generated ant with restrictions on the range
+    /// Add a randomly generated turmite with restrictions on the range
     /// of positions and the possible orientations.
     pub fn add_rand(
         &mut self,
@@ -133,7 +133,7 @@ impl<'a> Anthill<'a> {
         rules_rng: Option<usize>,
     ) {
         let mut rng = rand::thread_rng();
-        self.ants.push(Ant {
+        self.turmites.push(Turmite {
             pos: [rng.gen_range(imin, imax), rng.gen_range(jmin, jmax)],
             dir: Dir::from(rng.gen_range(0, 4)),
             rules: match rules_rng {
@@ -143,18 +143,18 @@ impl<'a> Anthill<'a> {
         });
     }
 
-    /// Make all ants by one step
+    /// Make all turmites by one step
     pub fn next(&mut self) {
-        for ant in &mut self.ants {
-            let (m, t) = self.map[ant.rules][self.field[ant.pos]];
-            ant.turn(t);
-            self.field[ant.pos] = m;
-            ant.mv(self.hgt, self.wth);
+        for turmite in &mut self.turmites {
+            let (m, t) = self.map[turmite.rules][self.field[turmite.pos]];
+            turmite.turn(t);
+            self.field[turmite.pos] = m;
+            turmite.mv(self.hgt, self.wth);
         }
         self.cnt += 1;
     }
 
-    /// Make all ants advance by many steps (each at their own turn)
+    /// Make all turmites advance by many steps (each at their own turn)
     pub fn multi(&mut self, n: usize) {
         for _ in 0..n {
             self.next();
@@ -170,7 +170,7 @@ impl<'a> Anthill<'a> {
     }
 }
 
-impl Ant {
+impl Turmite {
     /// Change direction
     pub fn turn(&mut self, t: Turn) {
         self.dir = self.dir.turn(t);
