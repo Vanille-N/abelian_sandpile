@@ -67,6 +67,7 @@ fn render(cfg: &mut Config) {
     }
 }
 
+/// Stores all the relevant information needed to initialize an automaton
 pub struct Config<'a> {
     algo: Automaton<'a>,
     name: String,
@@ -75,6 +76,7 @@ pub struct Config<'a> {
 }
 
 impl<'a> Config<'a> {
+    /// Create a new simulation
     pub fn new(algo: Automaton<'a>, name: String, framerate: usize) -> Self {
         Self {
             algo,
@@ -84,23 +86,29 @@ impl<'a> Config<'a> {
         }
     }
 
+    /// File directory: `.{type}_{name}/`
     fn dir(&self) -> String {
         format!(".{}_{}", self.algo.str(), self.name)
     }
 
+    /// Final product: `{type}_{name}.avi`
     fn file(&self) -> String {
         format!("{}_{}.avi", self.algo.str(), self.name)
     }
 
+    /// Single state filename: `.{type}_{name}/out-{num}.ppm`
+    /// where num is automatically incremented and left-padded with 0s.
     fn frame(&mut self) -> String {
         let idx = self.idx;
         self.idx += 1;
         format!("{}/out-{}.ppm", self.dir(), Self::lpad(idx, 5))
     }
 
+    /// Cleanup directory: remove avi target if it already exists and
+    /// remove directory of ppm files in case it was not properly
+    /// deleted during the previous execution.
     pub fn prepare(&self) {
         let _ = Command::new("rm")
-            .arg("-r")
             .arg(&self.file())
             .status()
             .expect("Cleanup aborted");
@@ -113,6 +121,8 @@ impl<'a> Config<'a> {
             .unwrap_or_else(|_| panic!("could not create directory {}", self.dir()));
     }
 
+    /// Concatenate all ppm files into a single video,
+    /// then cleanup temporary files.
     pub fn build(&self) {
         eprintln!("All calculations done");
         let _ = Command::new("ffmpeg")
@@ -142,6 +152,7 @@ impl<'a> Config<'a> {
             .expect("Cleanup aborted");
     }
 
+    /// Left-pad usize with zeros
     fn lpad(s: usize, len: usize) -> String {
         let s = format!("{}", s);
         let l = s.len();
@@ -149,6 +160,7 @@ impl<'a> Config<'a> {
     }
 }
 
+/// Types of automata available
 pub enum Automaton<'a> {
     Sandpile,
     LifeLike(&'a str),
@@ -157,6 +169,7 @@ pub enum Automaton<'a> {
 }
 
 impl Automaton<'_> {
+    /// Associate automaton type to its name (used in the filenames)
     pub fn str(&self) -> String {
         match self {
             Automaton::Sandpile => String::from("sand"),
