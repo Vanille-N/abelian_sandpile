@@ -3,6 +3,7 @@ use std::ascii;
 
 use crate::canvas::*;
 
+/// A cell in a life-like automata can only be alive or dead
 #[derive(Clone, Copy)]
 struct Cell {
     curr: bool,
@@ -19,6 +20,8 @@ impl Colorize for Cell {
     }
 }
 
+/// A game of life (or other life-like) has its own rules in addition to
+/// other information
 pub struct LifeLike {
     rules: Rules,
     field: Canvas<Cell>,
@@ -30,6 +33,7 @@ pub struct LifeLike {
 }
 
 impl LifeLike {
+    /// Rules are given at the initialization, and cannot be modified
     pub fn new(hgt: usize, wth: usize, rules: &str) -> Self {
         Self {
             rules: Rules::new(rules),
@@ -42,6 +46,8 @@ impl LifeLike {
         }
     }
 
+    /// Birth cells at random all over the canvas.
+    /// p is the probability for any cell of being born.
     pub fn init_rand(&mut self, p: f64) {
         let mut rng = rand::thread_rng();
         for i in 0..self.hgt {
@@ -54,6 +60,9 @@ impl LifeLike {
         self.update();
     }
 
+    /// Birth cells at random with probability p, but only within an area
+    /// around the center of size given by f
+    /// (proportion of the total dimensions)
     pub fn init_cluster(&mut self, f: f64, p: f64) {
         let mut rng = rand::thread_rng();
         let lo = |n| (n as f64 * (1. - f) / 2.).floor() as usize;
@@ -68,6 +77,9 @@ impl LifeLike {
         self.update();
     }
 
+    /// Add pattern stored in an external file to the canvas.
+    /// Auto-detects file extension.
+    /// Works with `*.txt`, `*.lif`, `*.cells`, `*.rle`
     pub fn add_from_file(&mut self, file: &str, i0: isize, j0: isize, t: Transform) {
         let data = std::fs::read_to_string(file).unwrap();
         let mut i = i0;
@@ -217,6 +229,7 @@ impl LifeLike {
         self.update();
     }
 
+    /// Set each cell to its next state and count number of cells of each type
     pub fn update(&mut self) {
         self.born = 0;
         self.dead = 0;
@@ -229,6 +242,8 @@ impl LifeLike {
         self.cnt -= self.dead;
     }
 
+    /// 2D Array access with looping around the edges.
+    /// Only works with direct neighbors.
     fn index_move(&self, i: usize, j: usize, mvi: isize, mvj: isize) -> [usize; 2] {
         let (mut i, mut j) = (i, j);
         match mvi {
@@ -270,6 +285,7 @@ impl LifeLike {
         [i, j]
     }
 
+    /// Count live neighbor (Moore neighborhood)
     fn count_neigh(&self, i: usize, j: usize) -> usize {
         let mut res = 0;
         if self.field[self.index_move(i, j, -1, 0)].is_alive() {
@@ -299,6 +315,7 @@ impl LifeLike {
         res
     }
 
+    /// Calculate next state of the automaton
     pub fn next(&mut self) {
         for i in 0..self.hgt {
             for j in 0..self.wth {
@@ -316,6 +333,7 @@ impl LifeLike {
         self.update();
     }
 
+    /// Output current state to a file
     pub fn render(&mut self, cfg: &mut crate::Config) {
         let name = cfg.frame();
         self.field.render(&name);
@@ -328,8 +346,11 @@ impl LifeLike {
 }
 
 impl Cell {
+    /// All cells are created dead by default.
     pub fn new() -> Self {
         Self {
+            /// Changing the state has to be done
+            /// after all cells have been checked
             curr: false,
             succ: false,
         }
@@ -343,6 +364,7 @@ impl Cell {
         self.succ = false;
     }
 
+    /// Set current state to calculated next state
     pub fn update(&mut self, born: &mut usize, dead: &mut usize) {
         if self.succ {
             if !self.curr {
