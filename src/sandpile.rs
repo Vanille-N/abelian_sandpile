@@ -21,7 +21,6 @@ impl Grain {
 }
 
 impl Colorize for Grain {
-    /// Color depends on the height
     fn color(&self) -> Color {
         match self.hgt {
             0 => (0, 0, 0),
